@@ -11,38 +11,46 @@ describe Shoulda::Matchers::Json::SchemaParser do
     end
 
     it "can embed other schemas" do
-      create_schema "foo", <<-JSON.strip
+      create_schema "post", <<-JSON.strip
       {
         "type": "object",
+        "required": ["id", "title", "body"],
         "properties": {
-          "bar": { "type": "boolean" }
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "body": { "type": "string" }
         }
       }
       JSON
-      create_schema "foos", <<-JSON.strip
+      create_schema "posts", <<-JSON.strip
       {
         "type": "object",
+        "required": ["posts"],
         "properties": {
-          "foos": {
+          "posts": {
             "type": "array",
-            "items": <%= schema_for("foo") %>
+            "items": <%= schema_for("post") %>
           }
         }
       }
       JSON
 
       schema_parser = Shoulda::Matchers::Json::SchemaParser.new(schema_root)
-      schema = schema_parser.schema_for("foos")
+      schema = schema_parser.schema_for("posts")
 
       expect(JSON.parse(schema)).to eq({
         "type" => "object",
+        "required" => ["posts"],
         "properties" => {
-          "foos" => {
+          "posts" => {
             "type" => "array",
             "items" => {
               "type" => "object",
+              "required" => ["id", "title", "body"],
               "properties" => {
-                "bar" => { "type" => "boolean" }
+                "id" => { "type" => "integer" },
+                "title" => { "type" => "string" },
+                "body" => { "type" => "string" }
               }
             }
           }

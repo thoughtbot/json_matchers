@@ -93,7 +93,12 @@ Then, when you declare your collection schema, embed the singular schema with
 {
   "type": "object",
   "required": ["posts"],
-  "properties": <%= schema_for("post") %>
+  "properties": {
+    "posts": {
+      "type": "array",
+      "items": <%= schema_for("post") %>
+    }
+  }
 }
 ```
 
