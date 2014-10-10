@@ -66,6 +66,36 @@ describe "GET /posts" do
 end
 ```
 
+You can even embed schemas inside other schemas!
+
+First, declare the singular version of your schema.
+
+```json
+# spec/support/api/schemas/post.json
+
+{
+  "type": "object",
+  "required": ["id", "title", "body"],
+  "properties": {
+    "id": { "type": "integer" },
+    "title": { "type": "string" },
+    "body": { "type": "string" }
+  }
+}
+```
+
+Then, when you declare your collection schema, embed the singular schema with
+`ERB` and `schema_for`!
+
+```json
+# spec/support/api/schemas/posts.json
+
+{
+  "type": "object",
+  "required": ["posts"],
+  "properties": <%= schema_for("post") %>
+}
+```
 
 ## Configuration
 

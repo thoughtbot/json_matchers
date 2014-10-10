@@ -1,12 +1,4 @@
-require "shoulda/matchers/json"
-
 describe Shoulda::Matchers::Json, "#match_response_schema" do
-  it "fails when the schema is missing" do
-    expect {
-      expect(response_for("")).to match_response_schema("missing")
-    }.to raise_error(Shoulda::Matchers::Json::MissingSchema, /missing.json/)
-  end
-
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 

@@ -1,3 +1,5 @@
+require "shoulda/matchers/json"
+
 Dir["./spec/support/*"].each { |file| require file }
 
 RSpec.configure do |config|
