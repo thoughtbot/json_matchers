@@ -1,4 +1,3 @@
-require "active_support/all"
 require "shoulda/matchers/json"
 
 describe Shoulda::Matchers::Json, "#match_response_schema" do
