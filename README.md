@@ -1,13 +1,13 @@
 # Shoulda::Matchers::Json
 
-TODO: Write a gem description
+Validate your JSON APIs
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'shoulda-matchers-json'
+gem 'shoulda-matchers-json', require: false
 ```
 
 And then execute:
@@ -20,7 +20,65 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Inspired by [Validating JSON Schemas with an RSpec Matcher](http://robots.thoughtbot.com/validating-json-schemas-with-an-rspec-matcher)
+
+First, include it in your `spec_helper`:
+
+```ruby
+# spec/spec_helper.rb
+
+require "shoulda/matchers"
+require "shoulda/matchers/json"
+```
+
+First, define your [JSON Schema](http://json-schema.org/example1.html) in the schema directory:
+
+```json
+# spec/support/api/schemas/posts.json
+
+{
+  "type": "object",
+  "required": ["posts"],
+  "properties": {
+    "type": "object",
+    "required": ["id", "title", "body"],
+    "properties": {
+      "id": { "type": "integer" },
+      "title": { "type": "string" },
+      "body": { "type": "string" }
+    }
+  }
+}
+```
+
+Then, validate your response against your schema with `match_response_schema`
+
+```ruby
+# spec/requests/posts_spec.rb
+
+describe "GET /posts" do
+  it "returns Posts" do
+    get posts_path, format: :json
+
+    expect(response.status).to eq 200
+    expect(response).to match_response_schema("posts")
+  end
+end
+```
+
+
+## Configuration
+
+By default, the schema directory is `spec/support/api/schemas`.
+
+This can be configured via `Shoulda::Matchers::Json.schema_root`.
+
+
+```ruby
+# spec/support/shoulda-matchers-json.rb
+
+Shoulda::Matchers::Json.schema_root = "docs/api/schemas"
+```
 
 ## Contributing
 
