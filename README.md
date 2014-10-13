@@ -1,6 +1,6 @@
 # Shoulda::Matchers::Json
 
-Validate your JSON APIs
+Validate the JSON returned by your Rails JSON APIs
 
 ## Installation
 
@@ -31,7 +31,7 @@ require "shoulda/matchers"
 require "shoulda/matchers/json"
 ```
 
-First, define your [JSON Schema](http://json-schema.org/example1.html) in the schema directory:
+Define your [JSON Schema](http://json-schema.org/example1.html) in the schema directory:
 
 ```json
 # spec/support/api/schemas/posts.json
