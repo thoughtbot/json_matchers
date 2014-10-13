@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Shoulda::Matchers::Json::VERSION
   spec.authors       = ["Sean Doyle"]
   spec.email         = ["seandoyle@thoughtbot.com"]
-  spec.summary       = %q{Validation your API's JSON}
-  spec.description   = %q{Validation your API's JSON}
+  spec.summary       = %q{Validate your Rails JSON API's JSON}
+  spec.description   = %q{Validate your Rails JSON API's JSON}
   spec.homepage      = "https://github.com/seanpdoyle/shoulda-matchers-json"
   spec.license       = "MIT"
 
