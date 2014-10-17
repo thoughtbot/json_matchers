@@ -65,7 +65,9 @@ describe "GET /posts" do
 end
 ```
 
-You can even embed schemas inside other schemas!
+### Embedding other Schemas
+
+To DRY up your schema definitions, use JSON schema's `$ref`.
 
 First, declare the singular version of your schema.
 
@@ -83,8 +85,7 @@ First, declare the singular version of your schema.
 }
 ```
 
-Then, when you declare your collection schema, embed the singular schema with
-`ERB` and `schema_for`!
+Then, when you declare your collection schema, reference your singular schemas.
 
 ```json
 # spec/support/api/schemas/posts.json
@@ -95,11 +96,16 @@ Then, when you declare your collection schema, embed the singular schema with
   "properties": {
     "posts": {
       "type": "array",
-      "items": <%= schema_for("post") %>
+      "items": { "$ref": "post.json" }
     }
   }
 }
 ```
+
+NOTE: `$ref` resolves paths relative to the schema in question.
+
+In this case `"post.json"` will be resolved relative to
+`"spec/support/api/schemas"`.
 
 ## Configuration
 

@@ -11,11 +11,15 @@ module JSON
     self.schema_root = "#{Dir.pwd}/spec/support/api/schemas"
 
     def match_response_schema(schema_name)
-      schema_parser = SchemaParser.new(schema_root)
-
-      Matcher.new(schema_parser.schema_for(schema_name))
+      Matcher.new(schema_path.join("#{schema_name}.json"))
     end
     alias match_json_schema match_response_schema
+
+    private
+
+    def schema_path
+      Pathname(schema_root)
+    end
   end
 end
 
