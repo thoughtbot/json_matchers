@@ -4,7 +4,7 @@ describe JSON::Matchers, "#match_response_schema" do
 
     expect {
       expect(response_for("")).to match_response_schema("foo")
-    }.to raise_error(JSON::Matchers::InvalidError)
+    }.to raise_error(JSON::Matchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do
@@ -43,25 +43,22 @@ describe JSON::Matchers, "#match_response_schema" do
   end
 
   it "supports $ref" do
-    create_schema "foo", <<-JSON.strip_heredoc
-    {
-      "type": "object",
-      "properties": {
-        "foo": { "type": "string" }
+    create_schema("single", {
+      "type" => "object",
+      "required" => ["foo"],
+      "properties" => {
+        "foo" => { "type" => "string" }
       }
-    }
-    JSON
-    create_schema "foos", <<-JSON.strip_heredoc
-    {
-      "type": "array",
-      "items": { "$ref": "foo.json" }
-    }
-    JSON
+    })
+    create_schema("collection", {
+      "type" => "array",
+      "items" => { "$ref" => "single.json" }
+    })
 
     valid_response = response_for([{foo: "is a string"}])
     invalid_response = response_for([{foo: 0}])
 
-    expect(valid_response).to match_response_schema("foos")
-    expect(invalid_response).not_to match_response_schema("foos")
+    expect(valid_response).to match_response_schema("collection")
+    expect(invalid_response).not_to match_response_schema("collection")
   end
 end

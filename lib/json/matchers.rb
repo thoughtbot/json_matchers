@@ -1,6 +1,5 @@
 require "json/matchers/version"
 require "json/matchers/matcher"
-require "json/matchers/schema_parser"
 require "json/matchers/errors"
 require "active_support/all"
 
@@ -10,15 +9,8 @@ module JSON
 
     self.schema_root = "#{Dir.pwd}/spec/support/api/schemas"
 
-    def match_response_schema(schema_name)
-      Matcher.new(schema_path.join("#{schema_name}.json"))
-    end
-    alias match_json_schema match_response_schema
-
-    private
-
-    def schema_path
-      Pathname(schema_root)
+    def self.path_to_schema(schema_name)
+      Pathname(schema_root).join("#{schema_name}.json")
     end
   end
 end

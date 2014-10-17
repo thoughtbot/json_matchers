@@ -107,6 +107,8 @@ NOTE: `$ref` resolves paths relative to the schema in question.
 In this case `"post.json"` will be resolved relative to
 `"spec/support/api/schemas"`.
 
+To learn more about `$ref`, check out [Understanding JSON Schema Structuring](http://spacetelescope.github.io/understanding-json-schema/structuring.html)
+
 ## Configuration
 
 By default, the schema directory is `spec/support/api/schemas`.
