@@ -1,4 +1,4 @@
-# JSON::Schema::Matchers
+# JSON::Matchers
 
 Validate the JSON returned by your Rails JSON APIs
 
@@ -7,7 +7,7 @@ Validate the JSON returned by your Rails JSON APIs
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'json-schema-matchers', require: false
+gem 'json-matchers', require: false
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install json-schema-matchers
+    $ gem install json-matchers
 
 ## Usage
 
@@ -27,8 +27,7 @@ First, include it in your `spec_helper`:
 ```ruby
 # spec/spec_helper.rb
 
-require "shoulda/matchers"
-require "shoulda/matchers/json"
+require "json/matchers"
 ```
 
 Define your [JSON Schema](http://json-schema.org/example1.html) in the schema directory:
@@ -106,18 +105,18 @@ Then, when you declare your collection schema, embed the singular schema with
 
 By default, the schema directory is `spec/support/api/schemas`.
 
-This can be configured via `JSON::Schema::Matchers.schema_root`.
+This can be configured via `JSON::Matchers.schema_root`.
 
 
 ```ruby
-# spec/support/shoulda-matchers-json.rb
+# spec/support/json-matchers.rb
 
-JSON::Schema::Matchers.schema_root = "docs/api/schemas"
+JSON::Matchers.schema_root = "docs/api/schemas"
 ```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/shoulda-matchers-json/fork )
+1. Fork it ( https://github.com/[my-github-username]/json-matchers/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

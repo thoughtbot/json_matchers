@@ -1,10 +1,10 @@
-describe JSON::Schema::Matchers, "#match_response_schema" do
+describe JSON::Matchers, "#match_response_schema" do
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 
     expect {
       expect(response_for("")).to match_response_schema("foo")
-    }.to raise_error(JSON::Schema::Matchers::InvalidError)
+    }.to raise_error(JSON::Matchers::InvalidError)
   end
 
   it "does not fail with an empty JSON body" do
@@ -21,7 +21,7 @@ describe JSON::Schema::Matchers, "#match_response_schema" do
 
     expect {
       expect(response_for({})).to match_response_schema("array_schema")
-    }.to raise_error(JSON::Schema::Matchers::DoesNotMatch, /{}/)
+    }.to raise_error(JSON::Matchers::DoesNotMatch, /{}/)
   end
 
   it "fails when the body contains a property with the wrong type" do
@@ -34,7 +34,7 @@ describe JSON::Schema::Matchers, "#match_response_schema" do
 
     expect {
       expect(response_for({foo: 1})).to match_response_schema("array_schema")
-    }.to raise_error(JSON::Schema::Matchers::DoesNotMatch, /{"foo":1}/)
+    }.to raise_error(JSON::Matchers::DoesNotMatch, /{"foo":1}/)
   end
 
   it "does not fail when the schema matches" do
