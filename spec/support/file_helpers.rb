@@ -21,7 +21,7 @@ module FileHelpers
   end
 
   def schema_root
-    JSON::Schema::Matchers.schema_root
+    JSON::Matchers.schema_root
   end
 end
 
@@ -29,13 +29,13 @@ RSpec.configure do |config|
   config.include FileHelpers
 
   config.around do |example|
-    original_schema_root = JSON::Schema::Matchers.schema_root
-    JSON::Schema::Matchers.schema_root = "#{Dir.pwd}/spec/fixtures/schemas"
-    FileUtils.mkdir_p(JSON::Schema::Matchers.schema_root)
+    original_schema_root = JSON::Matchers.schema_root
+    JSON::Matchers.schema_root = "#{Dir.pwd}/spec/fixtures/schemas"
+    FileUtils.mkdir_p(JSON::Matchers.schema_root)
 
     example.run
 
-    FileUtils.rm_rf(JSON::Schema::Matchers.schema_root)
-    JSON::Schema::Matchers.schema_root = original_schema_root
+    FileUtils.rm_rf(JSON::Matchers.schema_root)
+    JSON::Matchers.schema_root = original_schema_root
   end
 end
