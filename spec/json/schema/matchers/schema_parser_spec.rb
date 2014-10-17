@@ -1,11 +1,11 @@
-require "shoulda/matchers/json/schema_parser"
+require "json/schema/matchers/schema_parser"
 
-describe Shoulda::Matchers::Json::SchemaParser do
+describe JSON::Schema::Matchers::SchemaParser do
   describe "#schema_for" do
     it "returns the JSON string for a given schema" do
       create_schema("foo", { type: "array" })
 
-      schema_parser = Shoulda::Matchers::Json::SchemaParser.new(schema_root)
+      schema_parser = JSON::Schema::Matchers::SchemaParser.new(schema_root)
 
       expect(schema_parser.schema_for("foo")).to eq '{"type":"array"}'
     end
@@ -35,7 +35,7 @@ describe Shoulda::Matchers::Json::SchemaParser do
       }
       JSON
 
-      schema_parser = Shoulda::Matchers::Json::SchemaParser.new(schema_root)
+      schema_parser = JSON::Schema::Matchers::SchemaParser.new(schema_root)
       schema = schema_parser.schema_for("posts")
 
       expect(JSON.parse(schema)).to eq({
@@ -59,10 +59,10 @@ describe Shoulda::Matchers::Json::SchemaParser do
     end
 
     it "fails when the schema is missing" do
-      schema_parser = Shoulda::Matchers::Json::SchemaParser.new(schema_root)
+      schema_parser = JSON::Schema::Matchers::SchemaParser.new(schema_root)
       expect {
         schema_parser.schema_for("missing")
-      }.to raise_error(Shoulda::Matchers::Json::MissingSchema, /missing.json/)
+      }.to raise_error(JSON::Schema::Matchers::MissingSchema, /missing.json/)
     end
   end
 end

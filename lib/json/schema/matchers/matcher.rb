@@ -1,8 +1,8 @@
 require "json-schema"
 
-module Shoulda
-  module Matchers
-    module Json
+module JSON
+  class Schema
+    module Matchers
       Matcher = Struct.new(:schema) do
         def matches?(response)
           JSON::Validator.validate!(json_schema, response.body, strict: true)

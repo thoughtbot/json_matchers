@@ -1,9 +1,9 @@
-require "shoulda/matchers/json"
+require "json/schema/matchers"
 
 Dir["./spec/support/*"].each { |file| require file }
 
 RSpec.configure do |config|
-  config.include Shoulda::Matchers::Json
+  config.include JSON::Schema::Matchers
   config.expect_with :rspec do |expectations|
 
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

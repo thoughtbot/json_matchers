@@ -1,12 +1,12 @@
-require "shoulda/matchers/json/version"
-require "shoulda/matchers/json/matcher"
-require "shoulda/matchers/json/schema_parser"
-require "shoulda/matchers/json/errors"
+require "json/schema/matchers/version"
+require "json/schema/matchers/matcher"
+require "json/schema/matchers/schema_parser"
+require "json/schema/matchers/errors"
 require "active_support/all"
 
-module Shoulda
-  module Matchers
-    module Json
+module JSON
+  class Schema
+    module Matchers
       mattr_accessor :schema_root
 
       self.schema_root = "#{Dir.pwd}/spec/support/api/schemas"
@@ -16,10 +16,11 @@ module Shoulda
 
         Matcher.new(schema_parser.schema_for(schema_name))
       end
+      alias match_json_schema match_response_schema
     end
   end
 end
 
 if defined?(RSpec)
-  require "shoulda/matchers/json/rspec"
+  require "json/schema/matchers/rspec"
 end

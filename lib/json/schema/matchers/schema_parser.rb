@@ -1,6 +1,6 @@
-module Shoulda
-  module Matchers
-    module Json
+module JSON
+  class Schema
+    module Matchers
       class SchemaParser
 
         attr_reader :schema_path
