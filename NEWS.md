@@ -1,4 +1,4 @@
-# HEAD
+# 0.2.0
 
 * RSpec failure messages include both the body of the response, and the body of
   the JSON Schema file
