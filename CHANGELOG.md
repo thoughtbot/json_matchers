@@ -1,6 +1,9 @@
 master
 ------
 
+0.2.2
+-----
+
 * Includes validation failure message in RSpec output
 
 0.2.1
