@@ -18,6 +18,11 @@ module JSON
         to match schema "#{schema_name}":
 
         #{schema_body}
+
+        ---
+
+        #{validation_failure_message}
+
         FAIL
       end
 
@@ -30,6 +35,11 @@ module JSON
         not to match schema "#{schema_name}":
 
         #{schema_body}
+
+        ---
+
+        #{validation_failure_message}
+
         FAIL
       end
 
