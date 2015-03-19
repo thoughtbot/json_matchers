@@ -52,12 +52,22 @@ if RSpec.respond_to?(:configure)
       matcher.matches?(response)
     end
 
-    failure_message do |response|
-      matcher.failure_message(response)
-    end
+    if respond_to?(:failure_message)
+      failure_message do |response|
+        matcher.failure_message(response)
+      end
 
-    failure_message_when_negated do |response|
-      matcher.failure_message_when_negated(response)
+      failure_message_when_negated do |response|
+        matcher.failure_message_when_negated(response)
+      end
+    else
+      failure_message_for_should do |response|
+        matcher.failure_message(response)
+      end
+
+      failure_message_for_should_not do |response|
+        matcher.failure_message_when_negated(response)
+      end
     end
   end
 end
