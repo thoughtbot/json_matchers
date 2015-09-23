@@ -15,8 +15,8 @@ describe JSON::Matchers, "#match_response_schema" do
 
   it "fails when the body is missing a required property" do
     create_schema("foo_schema", {
-      type: "object",
-      required: ["foo"],
+      "type" => "object",
+      "required" => ["foo"],
     })
 
     expect(response_for({})).not_to match_response_schema("foo_schema")
@@ -24,25 +24,26 @@ describe JSON::Matchers, "#match_response_schema" do
 
   it "fails when the body contains a property with the wrong type" do
     create_schema("foo_schema", {
-      type: "object",
-      properties: {
-        foo: { type: "string" }
+      "type" => "object",
+      "properties" => {
+        "foo" => { "type" => "string" },
       }
     })
 
-    expect(response_for({foo: 1})).not_to match_response_schema("foo_schema")
+    expect(response_for("foo" => 1)).
+      not_to match_response_schema("foo_schema")
   end
 
   it "contains the body in the failure message" do
-    create_schema("foo", { type: "array" })
+    create_schema("foo", { "type" => "array" })
 
     expect {
-      expect(response_for(bar: 5)).to match_response_schema("foo")
+      expect(response_for("bar" => 5)).to match_response_schema("foo")
     }.to raise_error(/{"bar":5}/)
   end
 
   it "contains the body in the failure message when negated" do
-    create_schema("foo", { type: "array" })
+    create_schema("foo", { "type" => "array" })
 
     expect {
       expect(response_for([])).not_to match_response_schema("foo")
@@ -50,16 +51,16 @@ describe JSON::Matchers, "#match_response_schema" do
   end
 
   it "contains the schema in the failure message" do
-    schema = { type: "array" }
+    schema = { "type" => "array" }
     create_schema("foo", schema)
 
     expect {
-      expect(response_for(bar: 5)).to match_response_schema("foo")
+      expect(response_for("bar" => 5)).to match_response_schema("foo")
     }.to raise_error(/#{schema.to_json}/)
   end
 
   it "contains the schema in the failure message when negated" do
-    schema = { type: "array" }
+    schema = { "type" => "array" }
     create_schema("foo", schema)
 
     expect {
@@ -69,8 +70,8 @@ describe JSON::Matchers, "#match_response_schema" do
 
   it "does not fail when the schema matches" do
     create_schema("array_schema", {
-      type: "array",
-      items: { type: "string" }
+      "type" => "array",
+      "items" => { "type" => "string" },
     })
 
     expect(response_for(["valid"])).to match_response_schema("array_schema")
@@ -81,16 +82,16 @@ describe JSON::Matchers, "#match_response_schema" do
       "type" => "object",
       "required" => ["foo"],
       "properties" => {
-        "foo" => { "type" => "string" }
+        "foo" => { "type" => "string" },
       }
     })
     create_schema("collection", {
       "type" => "array",
-      "items" => { "$ref" => "single.json" }
+      "items" => { "$ref" => "single.json" },
     })
 
-    valid_response = response_for([{foo: "is a string"}])
-    invalid_response = response_for([{foo: 0}])
+    valid_response = response_for([{ "foo" => "is a string" }])
+    invalid_response = response_for([{ "foo" => 0 }])
 
     expect(valid_response).to match_response_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
