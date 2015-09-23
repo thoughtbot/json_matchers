@@ -3,10 +3,10 @@ module JSON
     class RSpec < SimpleDelegator
       attr_reader :schema_name
 
-      def initialize(schema_name)
+      def initialize(schema_name, **options)
         @schema_name = schema_name
 
-        super(JSON::Matchers::Matcher.new(schema_path))
+        super(JSON::Matchers::Matcher.new(schema_path, options))
       end
 
       def failure_message(response)
@@ -55,8 +55,8 @@ module JSON
 end
 
 if RSpec.respond_to?(:configure)
-  RSpec::Matchers.define :match_response_schema do |schema_name|
-    matcher = JSON::Matchers::RSpec.new(schema_name)
+  RSpec::Matchers.define :match_response_schema do |schema_name, **options|
+    matcher = JSON::Matchers::RSpec.new(schema_name, options)
 
     match do |response|
       matcher.matches?(response)

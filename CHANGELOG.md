@@ -1,6 +1,8 @@
 master
 ------
 
+* Pass options from matcher to `JSON::Validator`
+
 0.2.2
 -----
 

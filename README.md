@@ -65,6 +65,27 @@ describe "GET /posts" do
 end
 ```
 
+### Passing options to the validator
+
+The matcher accepts options, which it'll pass to the validator:
+
+```ruby
+# spec/requests/posts_spec.rb
+
+describe "GET /posts" do
+  it "returns Posts" do
+    get posts_path, format: :json
+
+    expect(response.status).to eq 200
+    expect(response).to match_response_schema("posts", strict: false)
+  end
+end
+```
+
+A list of available options can be found [here][options]
+
+[options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
+
 ### Embedding other Schemas
 
 To DRY up your schema definitions, use JSON schema's `$ref`.

@@ -22,6 +22,23 @@ describe JSON::Matchers, "#match_response_schema" do
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
 
+  it "accepts options for the validator" do
+    create_schema("foo_schema", {
+      "type" => "object",
+      "required" => [
+        "id",
+      ],
+      "properties" => {
+        "id" => { "type" => "number" },
+        "title" => {"type" => "string"},
+      },
+      "additionalProperties" => false,
+    })
+
+    expect(response_for({ "id" => 1, "title" => "bar" })).
+      to match_response_schema("foo_schema", strict: false)
+  end
+
   it "fails when the body contains a property with the wrong type" do
     create_schema("foo_schema", {
       "type" => "object",
