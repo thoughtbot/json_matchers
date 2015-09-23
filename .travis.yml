@@ -1,6 +1,7 @@
+cache: bundler
+sudo: false
 language: ruby
 notifications:
   email: false
 rvm:
-- 2.0.0
-- jruby-19mode
+- 2.2.0
