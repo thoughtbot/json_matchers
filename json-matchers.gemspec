@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "json-matchers"
   spec.version       = JSON::Matchers::VERSION
   spec.authors       = ["Sean Doyle"]
-  spec.email         = ["seandoyle@thoughtbot.com"]
+  spec.email         = ["sean.p.doyle24@gmail.com"]
   spec.summary       = %q{Validate your Rails JSON API's JSON}
   spec.description   = %q{Validate your Rails JSON API's JSON}
-  spec.homepage      = "https://github.com/seanpdoyle/json-matchers"
+  spec.homepage      = "https://github.com/thoughtbot/json-matchers"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

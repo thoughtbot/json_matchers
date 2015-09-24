@@ -145,8 +145,38 @@ JSON::Matchers.schema_root = "docs/api/schemas"
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/json-matchers/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Please see [CONTRIBUTING].
+
+`json-matchers` was inspired by [Validating JSON Schemas with an
+RSpec Matcher][blog post] by Laila Winner.
+
+`json-matchers` was written and is maintained by Sean Doyle.
+
+Many improvements and bugfixes were contributed by the [open source community].
+
+[blog post]: https://robots.thoughtbot.com/validating-json-schemas-with-an-rspec-matcher
+[CONTRIBUTING]: https://github.com/thoughtbot/json-matchers/blob/master/CONTRIBUTING.md
+[open source community]: https://github.com/thoughtbot/json-matchers/graphs/contributors
+
+## License
+
+json-matchers is Copyright © 2015 Sean Doyle and thoughtbot.
+
+It is free software, and may be redistributed under the terms specified in the
+[LICENSE] file.
+
+[LICENSE]: LICENSE.txt
+
+## About thoughtbot
+
+![thoughtbot](https://thoughtbot.com/logo.png)
+
+`json-matchers` is maintained and funded by thoughtbot, inc.
+The names and logos for thoughtbot are trademarks of thoughtbot, inc.
+
+We love open source software!
+See [our other projects][community].
+We are [available for hire][hire].
+
+[community]: https://thoughtbot.com/community?utm_source=github
+[hire]: https://thoughtbot.com?utm_source=github
