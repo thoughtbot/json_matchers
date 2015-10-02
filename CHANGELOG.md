@@ -1,6 +1,9 @@
 master
 ------
 
+0.3.1
+-----
+
 * BREAKING CHANGE: Rename module to `JsonMatchers`. This resolves clashing with
   gems like `oj` / `oj_mimic_json` that take control of the standard library's
   `json` module. As a result, the file to require is now `json_matchers`,

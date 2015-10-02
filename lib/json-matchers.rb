@@ -1,8 +1,8 @@
 warn <<-WARNING
-DEPRECATED: requiring the library via `require "json-matchers"` is deprecated.
+DEPRECATED: The `json-matchers` gem has been deprecated.
 
-To include the library, please add `require "json_matchers/rspec"` to your
-`spec/spec_helper.rb`.
+Please replace change your Gemfile's reference from `json-matchers` to
+`json_matchers`.
 WARNING
 
 require "json_matchers"
