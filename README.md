@@ -8,7 +8,7 @@ Add this line to your application's Gemfile:
 
 ```ruby
 group :test do
-  gem "json-matchers", require: false
+  gem "json_matchers"
 end
 ```
 
@@ -18,7 +18,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install json-matchers
+    $ gem install json_matchers
 
 ## Usage
 
@@ -140,7 +140,7 @@ This can be configured via `JsonMatchers.schema_root`.
 
 
 ```ruby
-# spec/support/json-matchers.rb
+# spec/support/json_matchers.rb
 
 JsonMatchers.schema_root = "docs/api/schemas"
 ```
@@ -149,20 +149,20 @@ JsonMatchers.schema_root = "docs/api/schemas"
 
 Please see [CONTRIBUTING].
 
-`json-matchers` was inspired by [Validating JSON Schemas with an
+`json_matchers` was inspired by [Validating JSON Schemas with an
 RSpec Matcher][blog post] by Laila Winner.
 
-`json-matchers` was written and is maintained by Sean Doyle.
+`json_matchers` was written and is maintained by Sean Doyle.
 
 Many improvements and bugfixes were contributed by the [open source community].
 
 [blog post]: https://robots.thoughtbot.com/validating-json-schemas-with-an-rspec-matcher
-[CONTRIBUTING]: https://github.com/thoughtbot/json-matchers/blob/master/CONTRIBUTING.md
-[open source community]: https://github.com/thoughtbot/json-matchers/graphs/contributors
+[CONTRIBUTING]: https://github.com/thoughtbot/json_matchers/blob/master/CONTRIBUTING.md
+[open source community]: https://github.com/thoughtbot/json_matchers/graphs/contributors
 
 ## License
 
-json-matchers is Copyright © 2015 Sean Doyle and thoughtbot.
+json_matchers is Copyright © 2015 Sean Doyle and thoughtbot.
 
 It is free software, and may be redistributed under the terms specified in the
 [LICENSE] file.
@@ -173,7 +173,7 @@ It is free software, and may be redistributed under the terms specified in the
 
 ![thoughtbot](https://thoughtbot.com/logo.png)
 
-`json-matchers` is maintained and funded by thoughtbot, inc.
+`json_matchers` is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
 We love open source software!

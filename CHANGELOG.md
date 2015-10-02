@@ -1,6 +1,8 @@
 master
 ------
 
+* BREAKING CHANGE: Rename the gem to `json_matchers`.
+
 0.3.1
 -----
 

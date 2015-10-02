@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "json_matchers/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "json-matchers"
+  spec.name          = "json_matchers"
   spec.version       = JsonMatchers::VERSION
   spec.authors       = ["Sean Doyle"]
   spec.email         = ["sean.p.doyle24@gmail.com"]
   spec.summary       = %q{Validate your Rails JSON API's JSON}
   spec.description   = %q{Validate your Rails JSON API's JSON}
-  spec.homepage      = "https://github.com/thoughtbot/json-matchers"
+  spec.homepage      = "https://github.com/thoughtbot/json_matchers"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
