@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "json/matchers/version"
+require "json_matchers/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "json-matchers"
-  spec.version       = JSON::Matchers::VERSION
+  spec.version       = JsonMatchers::VERSION
   spec.authors       = ["Sean Doyle"]
   spec.email         = ["sean.p.doyle24@gmail.com"]
   spec.summary       = %q{Validate your Rails JSON API's JSON}

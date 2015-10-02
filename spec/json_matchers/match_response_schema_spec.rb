@@ -1,10 +1,10 @@
-describe JSON::Matchers, "#match_response_schema" do
+describe JsonMatchers, "#match_response_schema" do
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 
     expect {
       expect(response_for("")).to match_response_schema("foo")
-    }.to raise_error(JSON::Matchers::InvalidSchemaError)
+    }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do

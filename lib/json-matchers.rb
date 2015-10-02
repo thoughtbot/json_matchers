@@ -1,5 +1,5 @@
 warn <<-WARNING
-DEPRECATED: requiring the library via `require "json/matchers"` is deprecated.
+DEPRECATED: requiring the library via `require "json-matchers"` is deprecated.
 
 To include the library, please add `require "json_matchers/rspec"` to your
 `spec/spec_helper.rb`.

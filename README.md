@@ -1,4 +1,4 @@
-# JSON::Matchers
+# JsonMatchers
 
 Validate the JSON returned by your Rails JSON APIs
 
@@ -7,7 +7,9 @@ Validate the JSON returned by your Rails JSON APIs
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'json-matchers', require: false
+group :test do
+  gem "json-matchers", require: false
+end
 ```
 
 And then execute:
@@ -27,7 +29,7 @@ First, include it in your `spec_helper`:
 ```ruby
 # spec/spec_helper.rb
 
-require "json/matchers"
+require "json_matchers/rspec"
 ```
 
 Define your [JSON Schema](http://json-schema.org/example1.html) in the schema directory:
@@ -134,13 +136,13 @@ To learn more about `$ref`, check out [Understanding JSON Schema Structuring](ht
 
 By default, the schema directory is `spec/support/api/schemas`.
 
-This can be configured via `JSON::Matchers.schema_root`.
+This can be configured via `JsonMatchers.schema_root`.
 
 
 ```ruby
 # spec/support/json-matchers.rb
 
-JSON::Matchers.schema_root = "docs/api/schemas"
+JsonMatchers.schema_root = "docs/api/schemas"
 ```
 
 ## Contributing
