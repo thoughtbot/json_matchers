@@ -1,5 +1,5 @@
 module FileHelpers
-  ORIGINAL_SCHEMA_ROOT = JSON::Matchers.schema_root
+  ORIGINAL_SCHEMA_ROOT = JsonMatchers.schema_root
 
   def create_schema(name, json)
     File.open("#{schema_root}/#{name}.json", "w") do |file|
@@ -23,7 +23,7 @@ module FileHelpers
   end
 
   def schema_root
-    JSON::Matchers.schema_root
+    JsonMatchers.schema_root
   end
 end
 
@@ -31,12 +31,12 @@ RSpec.configure do |config|
   config.include FileHelpers
 
   config.around do |example|
-    JSON::Matchers.schema_root = File.join(Dir.pwd, "spec", "fixtures", "schemas")
-    FileUtils.mkdir_p(JSON::Matchers.schema_root)
+    JsonMatchers.schema_root = File.join(Dir.pwd, "spec", "fixtures", "schemas")
+    FileUtils.mkdir_p(JsonMatchers.schema_root)
 
     example.run
 
-    FileUtils.rm_rf(JSON::Matchers.schema_root)
-    JSON::Matchers.schema_root = FileHelpers::ORIGINAL_SCHEMA_ROOT
+    FileUtils.rm_rf(JsonMatchers.schema_root)
+    JsonMatchers.schema_root = FileHelpers::ORIGINAL_SCHEMA_ROOT
   end
 end
