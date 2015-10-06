@@ -24,6 +24,8 @@ module JsonMatchers
       false
     rescue JSON::ParserError
       raise InvalidSchemaError
+    rescue MultiJson::ParseError
+      raise InvalidSchemaError
     end
 
     def validation_failure_message
