@@ -22,9 +22,7 @@ module JsonMatchers
     rescue JSON::Schema::ValidationError => ex
       @validation_failure_message = ex.message
       false
-    rescue JSON::ParserError
-      raise InvalidSchemaError
-    rescue MultiJson::ParseError
+    rescue JSON::ParserError, MultiJson::ParseError
       raise InvalidSchemaError
     end
 
