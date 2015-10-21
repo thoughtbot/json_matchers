@@ -41,12 +41,16 @@ Define your [JSON Schema](http://json-schema.org/example1.html) in the schema di
   "type": "object",
   "required": ["posts"],
   "properties": {
-    "type": "object",
-    "required": ["id", "title", "body"],
-    "properties": {
-      "id": { "type": "integer" },
-      "title": { "type": "string" },
-      "body": { "type": "string" }
+    "posts": {
+      "type": "array",
+      "items":{
+        "required": ["id", "title", "body"],
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "body": { "type": "string" }
+        }
+      }
     }
   }
 }
