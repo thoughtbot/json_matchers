@@ -14,10 +14,10 @@ describe JsonMatchers, "#match_response_schema" do
   end
 
   it "fails when the body is missing a required property" do
-    create_schema("foo_schema",
+    create_schema("foo_schema", {
       "type": "object",
       "required": ["foo"],
-    )
+    })
 
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
@@ -31,11 +31,13 @@ describe JsonMatchers, "#match_response_schema" do
         ],
         "properties": {
           "id": { "type": "number" },
+          "title": {"type": "string"},
         },
         "additionalProperties": false,
       })
 
-      expect({ "id": 1 }).to match_response_schema("foo_schema")
+      expect(response_for({ "id": 1, "title": "bar" })).
+        to match_response_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -177,23 +179,60 @@ describe JsonMatchers, "#match_response_schema" do
   end
 
   it "supports $ref" do
-    create_schema("single", {
+    create_schema("user", {
+      "id": "file:/#{JsonMatchers.schema_root}/user.json#",
       "type": "object",
-      "required": ["foo"],
+      "required": ["id"],
       "properties": {
-        "foo": { "type": "string" },
+        "id": {
+          "type": "integer"
+        }
       }
     })
-    create_schema("collection", {
-      "type": "array",
-      "items": { "$ref": "single.json" },
+    create_schema("users", {
+      "id": "file:/#{JsonMatchers.schema_root}/users.json#",
+      "type": "object",
+      "definitions": {
+        "users": {
+          "description": "A collection of users",
+          "example": [{ "id": "1" }],
+          "type": "array",
+          "items": { "$ref": "file:/#{JsonMatchers.schema_root}/user.json#" }
+        }
+      },
+      "required": ["users"],
+      "properties": { "users": { "$ref": "#/definitions/users" } }
     })
 
-    valid_response = response_for([{ "foo": "is a string" }])
-    invalid_response = response_for([{ "foo": 0 }])
+    valid_response = response_for({ "users": [{ "id": 1 }] })
+    invalid_response = response_for({ "users": [{ "id": "invalid" }]})
 
-    expect(valid_response).to match_response_schema("collection")
-    expect(invalid_response).not_to match_response_schema("collection")
+    expect(valid_response).to match_response_schema("users")
+    expect(invalid_response).not_to match_response_schema("users")
+  end
+
+  it "supports the 'id' keyword" do
+    create_schema("top-level-schema", {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+        "a": { "$ref": "file:/#{JsonMatchers.schema_root}/nested.json#" }
+      }
+    })
+    create_schema("nested-schema", {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "id": "file:/#{JsonMatchers.schema_root}/nested.json#",
+      "type": "object",
+      "required": ["b"],
+      "properties": { "b": { "type": "string" } },
+    })
+    response_json = { a: { b: "foo" } }
+    invalid_response_json = { a: { b: 4 } }
+
+    expect(response_for(response_json)).
+      to match_response_schema("top-level-schema")
+    expect(response_for(invalid_response_json)).
+      not_to match_response_schema("top-level-schema")
   end
 
   context "when options are passed directly to the matcher" do
