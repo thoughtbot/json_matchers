@@ -1,7 +1,11 @@
 master
 ======
 
-* *Breaking Change* - remove support for configuring validation options.
+* *BREAKING CHANGE* Implement the validation with the `json_schema` gem instead
+  of `json-schema`. [#31]
+* *BREAKING CHANGE* - remove support for configuring validation options.
+
+[#31]: https://github.com/thoughtbot/json_matchers/pull/31
 
 0.9.0
 =====

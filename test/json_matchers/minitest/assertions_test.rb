@@ -163,6 +163,24 @@ class AssertResponseMatchesSchemaTest < JsonMatchers::TestCase
     refute_matches_json_schema(json_as_array, schema)
   end
 
+  test "validates against a schema referencing with 'definitions'" do
+    schema = create(:schema, :referencing_definitions)
+
+    json = build(:response, :object)
+    json_as_hash = { "objects" => [json] }
+
+    assert_matches_json_schema(json_as_hash, schema)
+  end
+
+  test "fails against a schema referencing with 'definitions'" do
+    schema = create(:schema, :referencing_definitions)
+
+    json = build(:response, :invalid_object)
+    json_as_hash = { "objects" => [json] }
+
+    refute_matches_json_schema(json_as_hash, schema)
+  end
+
   def assert_raises_error_containing(schema_or_body)
     raised_error = assert_raises(Minitest::Assertion) do
       yield

@@ -194,6 +194,24 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json_as_array).not_to match_json_schema(schema)
   end
 
+  it "validates against a schema referencing with 'definitions'" do
+    schema = create(:schema, :referencing_definitions)
+
+    json = build(:response, :object)
+    json_as_hash = { "objects" => [json] }
+
+    expect(json_as_hash).to match_json_schema(schema)
+  end
+
+  it "fails against a schema referencing with 'definitions'" do
+    schema = create(:schema, :referencing_definitions)
+
+    json = build(:response, :invalid_object)
+    json_as_hash = { "objects" => [json] }
+
+    expect(json_as_hash).not_to match_json_schema(schema)
+  end
+
   def raise_error_containing(schema_or_body)
     raise_error do |error|
       sanitized_message = error.message.squish

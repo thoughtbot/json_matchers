@@ -24,7 +24,7 @@ Or install it yourself as:
 
 Inspired by [Validating JSON Schemas with an RSpec Matcher][original-blog-post].
 
-[original-blog-post]: (http://robots.thoughtbot.com/validating-json-schemas-with-an-rspec-matcher)
+[original-blog-post]: (https://robots.thoughtbot.com/validating-json-schemas-with-an-rspec-matcher)
 
 First, configure it in your test suite's helper file:
 
@@ -55,26 +55,27 @@ Minitest::Test.send(:include, JsonMatchers::Minitest::Assertions)
 
 ### Declare
 
-Declare your [JSON Schema](http://json-schema.org/example1.html) in the schema
+Declare your [JSON Schema](https://json-schema.org/example1.html) in the schema
 directory.
 
-`spec/support/api/schemas/posts.json` or `test/support/api/schemas/posts.json`:
+`spec/support/api/schemas/location.json` or
+`test/support/api/schemas/location.json`:
+
+Define your [JSON Schema](https://json-schema.org/example1.html) in the schema
+directory.
 
 ```json
 {
+  "id": "https://json-schema.org/geo",
+  "$schema": "https://json-schema.org/draft-06/schema#",
+  "description": "A geographical coordinate",
   "type": "object",
-  "required": ["posts"],
   "properties": {
-    "posts": {
-      "type": "array",
-      "items":{
-        "required": ["id", "title", "body"],
-        "properties": {
-          "id": { "type": "integer" },
-          "title": { "type": "string" },
-          "body": { "type": "string" }
-        }
-      }
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
     }
   }
 }
@@ -84,18 +85,20 @@ directory.
 
 #### RSpec
 
+```ruby
+
 Validate a JSON response, a Hash, or a String against a JSON Schema with
 `match_json_schema`:
 
-`spec/requests/posts_spec.rb`
+`spec/requests/locations_spec.rb`
 
 ```ruby
-describe "GET /posts" do
-  it "returns Posts" do
-    get posts_path, format: :json
+describe "GET /locations" do
+  it "returns Locations" do
+    get locations_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response).to match_json_schema("posts")
+    expect(response).to match_json_schema("locations")
   end
 end
 ```
@@ -105,60 +108,87 @@ end
 Validate a JSON response, a Hash, or a String against a JSON Schema with
 `assert_matches_json_schema`:
 
-`test/integration/posts_test.rb`
+`test/integration/locations_test.rb`
 
 ```ruby
-def test_GET_posts_returns_Posts
-  get posts_path, format: :json
+def test_GET_posts_returns_Locations
+  get locations_path, format: :json
 
   assert_equal response.status, 200
-  assert_matches_json_schema response, "posts"
+  assert_matches_json_schema response, "locations"
 end
 ```
 
 ### Embedding other Schemas
 
-To DRY up your schema definitions, use JSON schema's `$ref`.
+To re-use other schema definitions, include `$ref` keys that refer to their
+definitions.
 
 First, declare the singular version of your schema.
 
-`spec/support/api/schemas/post.json`:
+`spec/support/api/schemas/user.json`:
 
 ```json
 {
+  "id": "file:/user.json#",
   "type": "object",
-  "required": ["id", "title", "body"],
+  "required": ["id"],
   "properties": {
     "id": { "type": "integer" },
-    "title": { "type": "string" },
-    "body": { "type": "string" }
-  }
+    "name": { "type": "string" },
+    "address": { "type": "string" },
+  },
 }
 ```
 
 Then, when you declare your collection schema, reference your singular schemas.
 
-`spec/support/api/schemas/posts.json`:
+`spec/support/api/schemas/users/index.json`:
 
 ```json
 {
+  "id": "file:/users/index.json#",
   "type": "object",
-  "required": ["posts"],
-  "properties": {
-    "posts": {
+  "definitions": {
+    "users": {
+      "description": "A collection of users",
+      "example": [{ "id": "1" }],
       "type": "array",
-      "items": { "$ref": "post.json" }
+      "items": {
+        "$ref": "file:/user.json#"
+      },
+    },
+  },
+  "required": ["users"],
+  "properties": {
+    "users": {
+      "$ref": "#/definitions/users"
     }
-  }
+  },
 }
 ```
 
 NOTE: `$ref` resolves paths relative to the schema in question.
 
-In this case `"post.json"` will be resolved relative to
-`"spec/support/api/schemas"`.
+In this case `"user.json"` and `"users/index.json"` are resolved relative to
+`"spec/support/api/schemas"` or `"test/support/api/schemas"`.
 
-To learn more about `$ref`, check out [Understanding JSON Schema Structuring](http://spacetelescope.github.io/understanding-json-schema/structuring.html)
+To learn more about `$ref`, check out
+[Understanding JSON Schema Structuring][$ref].
+
+[$ref]: https://spacetelescope.github.io/understanding-json-schema/structuring.html
+
+## Configuration
+
+By default, the schema directory is `spec/support/api/schemas`.
+
+This can be configured via `JsonMatchers.schema_root`.
+
+```ruby
+# spec/support/json_matchers.rb
+
+JsonMatchers.schema_root = "docs/api/schemas"
+```
 
 ## Upgrading from `0.9.x`
 

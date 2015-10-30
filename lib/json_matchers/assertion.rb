@@ -14,7 +14,7 @@ module JsonMatchers
     def valid?(json)
       @payload = Payload.new(json)
 
-      matcher.matches?(payload.to_s)
+      matcher.matches?(payload)
     end
 
     def valid_failure_message
@@ -58,7 +58,7 @@ not to match schema "#{schema_name}":
     end
 
     def schema_body
-      File.read(schema_path)
+      schema_path.read
     end
 
     def format_json(json)

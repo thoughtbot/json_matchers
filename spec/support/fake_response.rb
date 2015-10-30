@@ -3,7 +3,7 @@ FakeResponse = Struct.new(:body) do
     JSON.parse(body)
   end
 
-  def to_json
+  def to_json(*)
     body
   end
 end

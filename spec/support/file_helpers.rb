@@ -2,7 +2,6 @@ require "fileutils"
 
 module FileHelpers
   def setup_fixtures(*pathnames)
-    JSON::Validator.clear_cache
     original_schema_root = JsonMatchers.schema_root
 
     JsonMatchers.schema_root = File.join(*pathnames)

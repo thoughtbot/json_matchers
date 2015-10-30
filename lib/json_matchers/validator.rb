@@ -1,18 +1,34 @@
-require "json-schema"
+require "json_matchers/parser"
 
 module JsonMatchers
   class Validator
-    def initialize(payload:, schema_path:)
-      @payload = payload
-      @schema_path = schema_path.to_s
+    def initialize(document_store:, schema_path:)
+      @document_store = document_store
+      @schema_path = schema_path
     end
 
-    def validate!
-      JSON::Validator.fully_validate(schema_path, payload, record_errors: true)
+    def validate(payload)
+      json_schema.validate!(payload.as_json, fail_fast: true)
+
+      []
+    rescue JsonSchema::Error => error
+      [error.message]
     end
 
     private
 
-    attr_reader :payload, :schema_path
+    attr_reader :document_store, :schema_path
+
+    def json_schema
+      @json_schema ||= build_json_schema_with_expanded_references
+    end
+
+    def build_json_schema_with_expanded_references
+      json_schema = Parser.new(schema_path).parse
+
+      json_schema.expand_references!(store: document_store)
+
+      json_schema
+    end
   end
 end

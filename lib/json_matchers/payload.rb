@@ -4,6 +4,10 @@ module JsonMatchers
       @payload = extract_json_string(payload)
     end
 
+    def as_json
+      JSON.parse(payload)
+    end
+
     def to_s
       payload
     end

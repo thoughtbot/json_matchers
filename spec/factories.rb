@@ -35,12 +35,12 @@ FactoryBot.define do
     trait :object do
       json do
         {
+          "id": "file:/#{name}.json#",
+          "description": "An object containing some #{name} data",
           "type": "object",
-          "required": [
-            "id",
-          ],
+          "required": ["id"],
           "properties": {
-            "id": { "type": "number" },
+            "id": { "type": "integer" },
           },
           "additionalProperties": false,
         }
@@ -65,9 +65,41 @@ FactoryBot.define do
 
       initialize_with do
         FakeSchema.new(name, {
+          "$schema": "https://json-schema.org/draft-04/schema#",
           "type": "array",
-          "items": { "$ref": "#{items.name}.json" },
+          "items": { "$ref": "file:/#{items.name}.json#" },
         })
+      end
+    end
+
+    trait :referencing_definitions do
+      association :items, factory: [:schema, :object], name: "object"
+      association :example, factory: [:response, :object]
+
+      transient do
+        plural { items.name.pluralize }
+      end
+
+      json do
+        {
+          "$schema": "https://json-schema.org/draft-04/schema#",
+          "id": "file:/#{name}.json#",
+          "type": "object",
+          "definitions": {
+            plural => {
+              "type": "array",
+              "items": { "$ref": "file:/#{items.name}.json#" },
+              "description": "A collection of #{plural}",
+              "example": example,
+            },
+          },
+          "required": [plural],
+          "properties": {
+            plural => {
+              "$ref": "#/definitions/#{plural}",
+            },
+          },
+        }
       end
     end
 

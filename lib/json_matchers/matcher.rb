@@ -1,23 +1,18 @@
-require "json-schema"
+require "json_schema"
+require "json_matchers/parser"
 require "json_matchers/validator"
 
 module JsonMatchers
   class Matcher
     def initialize(schema_path)
       @schema_path = schema_path
+      @document_store = build_and_populate_document_store
     end
 
     def matches?(payload)
-      validator = build_validator(payload)
-
-      self.errors = validator.validate!
+      self.errors = validator.validate(payload)
 
       errors.empty?
-    rescue JSON::Schema::ValidationError => error
-      self.errors = [error.message]
-      false
-    rescue JSON::Schema::JsonParseError
-      raise InvalidSchemaError
     end
 
     def validation_failure_message
@@ -26,14 +21,22 @@ module JsonMatchers
 
     private
 
-    attr_reader :schema_path
     attr_accessor :errors
+    attr_reader :document_store, :schema_path
 
-    def build_validator(payload)
-      Validator.new(
-        payload: payload,
-        schema_path: schema_path,
-      )
+    def validator
+      Validator.new(schema_path: schema_path, document_store: document_store)
+    end
+
+    def build_and_populate_document_store
+      document_store = JsonSchema::DocumentStore.new
+
+      Dir.glob("#{JsonMatchers.schema_root}/**/*.json").
+        map { |path| Pathname.new(path) }.
+        map { |schema_path| Parser.new(schema_path).parse }.
+        each { |schema| document_store.add_schema(schema) }
+
+      document_store
     end
   end
 end
