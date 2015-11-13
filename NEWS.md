@@ -1,6 +1,9 @@
 master
 ======
 
+0.5.0
+=====
+
 Breaking Changes
 ----------------
 
