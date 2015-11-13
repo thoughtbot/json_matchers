@@ -73,7 +73,7 @@ end
 
 ### Passing options to the validator
 
-The matcher accepts options, which it'll pass to the validator:
+The matcher accepts options, which it passes to the validator:
 
 ```ruby
 # spec/requests/posts_spec.rb
@@ -83,7 +83,7 @@ describe "GET /posts" do
     get posts_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response).to match_response_schema("posts", strict: false)
+    expect(response).to match_response_schema("posts", strict: true)
   end
 end
 ```

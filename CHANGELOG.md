@@ -1,6 +1,8 @@
 master
 ------
 
+* No longer default to `strict: true`.
+
 0.4.0
 -----
 

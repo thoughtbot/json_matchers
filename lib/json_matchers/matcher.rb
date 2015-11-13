@@ -10,14 +10,10 @@ module JsonMatchers
     def matches?(response)
       @response = response
 
-      validator_options = {
-        strict: true,
-      }.merge(options)
-
       JSON::Validator.validate!(
         schema_path.to_s,
         response.body,
-        validator_options,
+        options,
       )
     rescue JSON::Schema::ValidationError => ex
       @validation_failure_message = ex.message
