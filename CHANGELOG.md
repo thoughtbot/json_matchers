@@ -1,6 +1,8 @@
 master
 ------
 
+* Pass `strict: false` when the `"required"` key is present in the Schema.
+
 0.4.0
 -----
 

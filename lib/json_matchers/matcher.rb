@@ -11,7 +11,7 @@ module JsonMatchers
       @response = response
 
       validator_options = {
-        strict: true,
+        strict: required_key_absent?,
       }.merge(options)
 
       JSON::Validator.validate!(
@@ -33,5 +33,13 @@ module JsonMatchers
     private
 
     attr_reader :schema_path, :options
+
+    def schema
+      @schema ||= schema_path.read
+    end
+
+    def required_key_absent?
+      !schema.include?(%{"required":})
+    end
   end
 end

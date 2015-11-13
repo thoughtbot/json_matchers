@@ -88,6 +88,9 @@ describe "GET /posts" do
 end
 ```
 
+Unless specified, the validator will be configured with `strict: false`
+when the schema contains a `"required"` key, and `true` otherwise.
+
 A list of available options can be found [here][options]
 
 [options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162

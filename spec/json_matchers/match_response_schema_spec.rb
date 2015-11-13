@@ -113,4 +113,66 @@ describe JsonMatchers, "#match_response_schema" do
     expect(valid_response).to match_response_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
   end
+
+  context "when the `required` key is absent" do
+    it "validates with `strict: true`" do
+      create_schema("without_additional", {
+        "type" => "object",
+        "properties" => {
+          "foo" => { "type" => "string" },
+        },
+      })
+      create_schema("with_additional", {
+        "type" => "object",
+        "properties" => {
+          "foo" => { "type" => "string" },
+        },
+        "additionalProperties" => [
+          "bar" => { "type" => "string" },
+        ],
+      })
+
+      response = response_for(
+        "foo" => "is required",
+        "bar" => "is additional",
+      )
+
+      expect(response).not_to match_response_schema("without_additional")
+      expect(response).to match_response_schema("with_additional")
+    end
+  end
+
+  context "when the `required` key is present" do
+    it "validates with `strict: false`" do
+      create_schema("without_additional", {
+        "type" => "object",
+        "required" => [
+          "foo",
+        ],
+        "properties" => {
+          "foo" => { "type" => "string" },
+        },
+      })
+      create_schema("with_additional", {
+        "type" => "object",
+        "required" => [
+          "foo",
+        ],
+        "properties" => {
+          "foo" => { "type" => "string" },
+        },
+        "additionalProperties" => [
+          "bar" => { "type" => "string" },
+        ],
+      })
+
+      response = response_for(
+        "foo" => "is required",
+        "bar" => "is additional",
+      )
+
+      expect(response).to match_response_schema("without_additional")
+      expect(response).to match_response_schema("with_additional")
+    end
+  end
 end
