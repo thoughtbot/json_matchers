@@ -184,10 +184,8 @@ describe JsonMatchers, "#match_response_schema" do
       "type": "object",
       "required": ["id"],
       "properties": {
-        "id": {
-          "type": "integer"
-        }
-      }
+        "id": { "type": "integer" },
+      },
     })
     create_schema("users", {
       "id": "file:/#{JsonMatchers.schema_root}/users.json#",
@@ -197,11 +195,11 @@ describe JsonMatchers, "#match_response_schema" do
           "description": "A collection of users",
           "example": [{ "id": "1" }],
           "type": "array",
-          "items": { "$ref": "file:/#{JsonMatchers.schema_root}/user.json#" }
-        }
+          "items": { "$ref": "file:/#{JsonMatchers.schema_root}/user.json#" },
+        },
       },
       "required": ["users"],
-      "properties": { "users": { "$ref": "#/definitions/users" } }
+      "properties": { "users": { "$ref": "#/definitions/users" } },
     })
 
     valid_response = response_for({ "users": [{ "id": 1 }] })
@@ -216,8 +214,8 @@ describe JsonMatchers, "#match_response_schema" do
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-        "a": { "$ref": "file:/#{JsonMatchers.schema_root}/nested.json#" }
-      }
+        "a": { "$ref": "file:/#{JsonMatchers.schema_root}/nested.json#" },
+      },
     })
     create_schema("nested-schema", {
       "$schema": "http://json-schema.org/draft-04/schema#",
