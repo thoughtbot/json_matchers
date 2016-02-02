@@ -113,4 +113,21 @@ describe JsonMatchers, "#match_response_schema" do
     expect(valid_response).to match_response_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
   end
+
+  it "works when a pure string is used for response" do
+    create_schema("foo_schema", {
+      "type" => "object",
+      "required" => [
+        "id",
+      ],
+      "properties" => {
+        "id" => { "type" => "number" },
+        "title" => {"type" => "string"},
+      },
+      "additionalProperties" => false,
+    })
+
+    expect({ "id" => 1, "title" => "bar" }.to_json).
+      to match_response_schema("foo_schema", strict: false)
+  end
 end

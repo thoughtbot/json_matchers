@@ -19,7 +19,7 @@ module FileHelpers
                     else
                       json.to_json
                     end
-    double(body: response_body)
+    # double(body: response_body)
   end
 
   def schema_root
