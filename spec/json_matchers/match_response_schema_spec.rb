@@ -122,7 +122,7 @@ describe JsonMatchers, "#match_response_schema" do
       ],
       "properties" => {
         "id" => { "type" => "number" },
-        "title" => {"type" => "string"},
+        "title" => { "type" => "string" },
       },
       "additionalProperties" => false,
     })

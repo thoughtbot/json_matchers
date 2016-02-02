@@ -8,9 +8,9 @@ module JsonMatchers
       elsif response.is_a?(String)
         response
       else
-        fail 'Response does not have a #body method and is ' \
-          'not a string. It has the class class ' \
-          "#{response.class}."
+        fail "Response does not have a #body method and is " \
+             "not a string. It has the class class " \
+             "#{response.class}."
       end
     end
 
@@ -23,7 +23,7 @@ module JsonMatchers
       JSON::Validator.validate!(
         schema_path.to_s,
         Matcher.extract_response_body(response),
-        options
+        options,
       )
     rescue JSON::Schema::ValidationError => ex
       @validation_failure_message = ex.message
