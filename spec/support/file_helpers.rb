@@ -2,8 +2,6 @@ module FileHelpers
   ORIGINAL_SCHEMA_ROOT = JsonMatchers.schema_root
 
   def create_schema(name, json)
-    JSON::Validator.clear_cache
-
     File.open("#{schema_root}/#{name}.json", "w") do |file|
       case json
       when NilClass, String

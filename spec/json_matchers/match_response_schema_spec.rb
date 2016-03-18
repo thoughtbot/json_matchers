@@ -1,4 +1,6 @@
 describe JsonMatchers, "#match_response_schema" do
+  before(:each) { JSON::Validator.clear_cache }
+  
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 
