@@ -1,6 +1,9 @@
 master
 ======
 
+0.5.1
+=====
+
 * Update `json-schema` dependency to `~> 2.6.0`. [#37]
 
 [#37]: https://github.com/thoughtbot/json_matchers/pull/37
