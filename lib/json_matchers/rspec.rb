@@ -14,7 +14,7 @@ module JsonMatchers
       <<-FAIL.strip_heredoc
       expected
 
-      #{response.body}
+      #{Matcher.extract_response_body(response)}
 
       to match schema "#{schema_name}":
 
@@ -31,7 +31,7 @@ module JsonMatchers
       <<-FAIL.strip_heredoc
       expected
 
-      #{response.body}
+      #{Matcher.extract_response_body(response)}
 
       not to match schema "#{schema_name}":
 
