@@ -1,3 +1,6 @@
+require "fileutils"
+require "json"
+
 module FileHelpers
   ORIGINAL_SCHEMA_ROOT = JsonMatchers.schema_root
 
@@ -7,7 +10,7 @@ module FileHelpers
       when NilClass, String
         file.write(json.to_s)
       else
-        file.write(json.to_json)
+        file.write(JSON.generate(json))
       end
     end
   end

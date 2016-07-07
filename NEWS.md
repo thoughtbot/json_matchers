@@ -1,12 +1,17 @@
 master
 ======
 
+* Remove dependency on Rails. [#47]
+
+[#47]: https://github.com/thoughtbot/json_matchers/pull/47
+
 0.6.1
 =====
 
-* Configure default options for all matchers.
+* Configure default options for all matchers. [#46]
 * Use `JSON.pretty_generate` to format error messages. [#44]
 
+[#46]: https://github.com/thoughtbot/json_matchers/pull/46
 [#44]: https://github.com/thoughtbot/json_matchers/pull/44
 
 0.6.0

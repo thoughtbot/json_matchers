@@ -2,10 +2,11 @@ require "json_matchers/version"
 require "json_matchers/configuration"
 require "json_matchers/matcher"
 require "json_matchers/errors"
-require "active_support/all"
 
 module JsonMatchers
-  mattr_accessor :schema_root
+  class << self
+    attr_accessor :schema_root
+  end
 
   self.schema_root = "#{Dir.pwd}/spec/support/api/schemas"
 

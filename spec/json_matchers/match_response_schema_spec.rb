@@ -159,7 +159,12 @@ describe JsonMatchers, "#match_response_schema" do
 
   def raise_formatted_error(error_message)
     raise_error do |error|
-      expect(error.message.squish).to include(error_message)
+      sanitized_message = error.message.
+        gsub(/\A[[:space:]]+/, "").
+        gsub(/[[:space:]]+\z/, "").
+        gsub(/[[:space:]]+/, " ")
+
+      expect(sanitized_message).to include(error_message)
     end
   end
 end

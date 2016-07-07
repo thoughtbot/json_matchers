@@ -44,6 +44,8 @@ not to match schema "#{schema_name}":
       FAIL
     end
 
+    private
+
     def pretty_json(json_string)
       JSON.pretty_generate(JSON.parse(json_string.to_s))
     end
