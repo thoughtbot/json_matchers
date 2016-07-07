@@ -1,3 +1,4 @@
+require "delegate"
 require "json_matchers"
 
 module JsonMatchers
