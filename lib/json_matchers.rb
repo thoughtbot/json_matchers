@@ -1,7 +1,6 @@
 require "json_matchers/version"
 require "json_matchers/matcher"
 require "json_matchers/errors"
-require "active_support/all"
 
 module JsonMatchers
   @@schema_root = "#{Dir.pwd}/spec/support/api/schemas"
