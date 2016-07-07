@@ -12,7 +12,7 @@ module JsonMatchers
     end
 
     def failure_message(response)
-      <<-FAIL.strip_heredoc
+      strip_heredoc(<<-FAIL)
       expected
 
       #{response.body}
@@ -29,7 +29,7 @@ module JsonMatchers
     end
 
     def failure_message_when_negated(response)
-      <<-FAIL.strip_heredoc
+      strip_heredoc(<<-FAIL)
       expected
 
       #{response.body}
@@ -51,6 +51,14 @@ module JsonMatchers
 
     def schema_body
       File.read(schema_path)
+    end
+
+    private
+
+    def strip_heredoc(str)
+      indent = str.scan(/^[ \t]*(?=\S)/).min
+      indent = indent ? indent.size : 0
+      str.gsub(/^[ \t]{#{indent}}/, '')
     end
   end
 end
