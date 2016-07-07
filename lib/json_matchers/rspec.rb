@@ -58,7 +58,7 @@ module JsonMatchers
     def strip_heredoc(str)
       indent = str.scan(/^[ \t]*(?=\S)/).min
       indent = indent ? indent.size : 0
-      str.gsub(/^[ \t]{#{indent}}/, '')
+      str.gsub(/^[ \t]{#{indent}}/, "")
     end
   end
 end
