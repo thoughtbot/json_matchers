@@ -13,16 +13,10 @@ module FileHelpers
   end
 
   def response_for(json)
-    response_body = case json
-                    when String, NilClass
-                      json.to_s
-                    else
-                      json.to_json
-                    end
-    double(body: response_body)
+    double(body: json_for(json))
   end
 
-  def json_response_for(json)
+  def json_for(json)
     case json
     when String, NilClass
       json.to_s

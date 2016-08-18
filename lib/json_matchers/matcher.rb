@@ -7,13 +7,12 @@ module JsonMatchers
       @options = options
     end
 
-    def matches?(response)
-      # Why we need this?
-      # @response = response
+    def matches?(json_string)
+      @json_string = json_string
 
       JSON::Validator.validate!(
         schema_path.to_s,
-        response,
+        json_string,
         options,
       )
     rescue JSON::Schema::ValidationError => ex
