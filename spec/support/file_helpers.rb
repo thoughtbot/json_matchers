@@ -22,6 +22,15 @@ module FileHelpers
     double(body: response_body)
   end
 
+  def json_response_for(json)
+    case json
+    when String, NilClass
+      json.to_s
+    else
+      json.to_json
+    end
+  end
+
   def schema_root
     JsonMatchers.schema_root
   end
