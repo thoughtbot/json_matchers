@@ -10,11 +10,11 @@ module JsonMatchers
       super(JsonMatchers::Matcher.new(schema_path, options))
     end
 
-    def failure_message(response)
+    def failure_message(json_string)
       <<-FAIL.strip_heredoc
       expected
 
-      #{response.body}
+      #{json_string}
 
       to match schema "#{schema_name}":
 
@@ -27,11 +27,11 @@ module JsonMatchers
       FAIL
     end
 
-    def failure_message_when_negated(response)
+    def failure_message_when_negated(json_string)
       <<-FAIL.strip_heredoc
       expected
 
-      #{response.body}
+      #{json_string}
 
       not to match schema "#{schema_name}":
 
@@ -59,24 +59,50 @@ if RSpec.respond_to?(:configure)
     matcher = JsonMatchers::RSpec.new(schema_name, options)
 
     match do |response|
-      matcher.matches?(response)
+      matcher.matches?(response.body)
     end
 
     if respond_to?(:failure_message)
       failure_message do |response|
-        matcher.failure_message(response)
+        matcher.failure_message(response.body)
       end
 
       failure_message_when_negated do |response|
-        matcher.failure_message_when_negated(response)
+        matcher.failure_message_when_negated(response.body)
       end
     else
       failure_message_for_should do |response|
-        matcher.failure_message(response)
+        matcher.failure_message(response.body)
       end
 
       failure_message_for_should_not do |response|
-        matcher.failure_message_when_negated(response)
+        matcher.failure_message_when_negated(response.body)
+      end
+    end
+  end
+
+  RSpec::Matchers.define :match_json_schema do |schema_name, **options|
+    matcher = JsonMatchers::RSpec.new(schema_name, options)
+
+    match do |json_string|
+      matcher.matches?(json_string)
+    end
+
+    if respond_to?(:failure_message)
+      failure_message do |json_string|
+        matcher.failure_message(json_string)
+      end
+
+      failure_message_when_negated do |json_string|
+        matcher.failure_message_when_negated(json_string)
+      end
+    else
+      failure_message_for_should do |json_string|
+        matcher.failure_message(json_string)
+      end
+
+      failure_message_for_should_not do |json_string|
+        matcher.failure_message_when_negated(json_string)
       end
     end
   end

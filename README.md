@@ -71,6 +71,21 @@ describe "GET /posts" do
 end
 ```
 
+Or validate any potential JSON data with `match_json_schema`
+
+```ruby
+# spec/requests/posts_spec.rb
+
+describe "GET /posts" do
+  it "returns Posts" do
+    get posts_path, format: :json
+
+    expect(response.status).to eq 200
+    expect(response.body).to match_json_schema("posts")
+  end
+end
+```
+
 ### Passing options to the validator
 
 The matcher accepts options, which it passes to the validator:
@@ -84,6 +99,19 @@ describe "GET /posts" do
 
     expect(response.status).to eq 200
     expect(response).to match_response_schema("posts", strict: true)
+  end
+end
+```
+
+```ruby
+# spec/requests/posts_spec.rb
+
+describe "GET /posts" do
+  it "returns Posts" do
+    get posts_path, format: :json
+
+    expect(response.status).to eq 200
+    expect(response.body).to match_json_schema("posts")
   end
 end
 ```
