@@ -1,6 +1,9 @@
 master
 ======
 
+0.6.0
+=====
+
 * Accept a JSON string along with a `response`.
 
 [#43]: https://github.com/thoughtbot/json_matchers/pull/43
