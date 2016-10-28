@@ -2,9 +2,9 @@ require "json-schema"
 
 module JsonMatchers
   class Matcher
-    def initialize(schema_path, **options)
+    def initialize(schema_path, options = {})
       @schema_path = schema_path
-      @options = options
+      @options = default_options.merge(options)
     end
 
     def matches?(response)
@@ -34,6 +34,10 @@ module JsonMatchers
       else
         response
       end
+    end
+
+    def default_options
+      JsonMatchers.configuration.options || {}
     end
   end
 end

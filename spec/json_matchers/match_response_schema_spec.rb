@@ -22,23 +22,6 @@ describe JsonMatchers, "#match_response_schema" do
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
 
-  it "accepts options for the validator" do
-    create_schema("foo_schema", {
-      "type" => "object",
-      "required" => [
-        "id",
-      ],
-      "properties" => {
-        "id" => { "type" => "number" },
-        "title" => {"type" => "string"},
-      },
-      "additionalProperties" => false,
-    })
-
-    expect(response_for({ "id" => 1, "title" => "bar" })).
-      to match_response_schema("foo_schema", strict: false)
-  end
-
   it "validates a JSON string" do
     create_schema("foo_schema", {
       "type" => "object",
@@ -128,6 +111,50 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect(valid_response).to match_response_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
+  end
+
+  context "when options are passed directly to the matcher" do
+    it "forwards options to the validator" do
+      create_schema("foo_schema", {
+        "type" => "object",
+        "properties" => {
+          "id" => { "type" => "number" },
+          "title" => { "type" => "string" },
+        },
+      })
+
+      expect(response_for({ "id" => 1, "title" => "bar" })).
+        to match_response_schema("foo_schema", strict: true)
+      expect(response_for({ "id" => 1 })).
+        not_to match_response_schema("foo_schema", strict: true)
+    end
+  end
+
+  context "when options are configured globally" do
+    it "forwards them to the validator" do
+      create_schema("foo_schema", {
+        "type" => "object",
+        "properties" => {
+          "id" => { "type" => "number" },
+          "title" => { "type" => "string" },
+        },
+      })
+
+      JsonMatchers.configure do |config|
+        config.options[:strict] = true
+      end
+
+      expect(response_for({ "id" => 1, "title" => "bar" })).
+        to match_response_schema("foo_schema")
+      expect(response_for({ "id" => 1 })).
+        not_to match_response_schema("foo_schema")
+    end
+
+    after do
+      JsonMatchers.configure do |config|
+        config.options.delete(:strict)
+      end
+    end
   end
 
   def raise_formatted_error(error_message)

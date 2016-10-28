@@ -103,7 +103,24 @@ describe "GET /posts" do
 end
 ```
 
-A list of available options can be found [here][options]
+A list of available options can be found [here][options].
+
+[options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
+
+### Default matcher options
+
+To configure the default options passed to *all* matchers, call
+`JsonMatchers.configure`:
+
+```rb
+# spec/support/json_matchers.rb
+
+JsonMatchers.configure do |config|
+  config.options[:strict] = true
+end
+```
+
+A list of available options can be found [here][options].
 
 [options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
 

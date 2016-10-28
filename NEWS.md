@@ -1,6 +1,7 @@
 master
 ======
 
+* Configure default options for all matchers.
 * Use `JSON.pretty_generate` to format error messages. [#44]
 
 [#44]: https://github.com/thoughtbot/json_matchers/pull/44
