@@ -11,35 +11,35 @@ module JsonMatchers
     end
 
     def failure_message(response)
-      <<-FAIL.strip_heredoc
-      #{validation_failure_message}
+      <<-FAIL
+#{validation_failure_message}
 
-      ---
+---
 
-      expected
+expected
 
-      #{pretty_json(response.body)}
+#{pretty_json(response.body)}
 
-      to match schema "#{schema_name}":
+to match schema "#{schema_name}":
 
-      #{pretty_json(schema_body)}
+#{pretty_json(schema_body)}
 
       FAIL
     end
 
     def failure_message_when_negated(response)
-      <<-FAIL.strip_heredoc
-      #{validation_failure_message}
+      <<-FAIL
+#{validation_failure_message}
 
-      ---
+---
 
-      expected
+expected
 
-      #{pretty_json(response.body)}
+#{pretty_json(response.body)}
 
-      not to match schema "#{schema_name}":
+not to match schema "#{schema_name}":
 
-      #{pretty_json(schema_body)}
+#{pretty_json(schema_body)}
 
       FAIL
     end
