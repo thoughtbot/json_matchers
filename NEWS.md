@@ -1,6 +1,9 @@
 master
 ======
 
+0.6.2
+=====
+
 * Remove dependency on Rails. [#47]
 
 [#47]: https://github.com/thoughtbot/json_matchers/pull/47
