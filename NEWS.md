@@ -1,6 +1,10 @@
 master
 ======
 
+* Use `JSON.pretty_generate` to format error messages. [#44]
+
+[#44]: https://github.com/thoughtbot/json_matchers/pull/44
+
 0.6.0
 =====
 

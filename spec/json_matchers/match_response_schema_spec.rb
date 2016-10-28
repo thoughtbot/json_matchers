@@ -72,7 +72,7 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect {
       expect(response_for("bar" => 5)).to match_response_schema("foo")
-    }.to raise_error(/{"bar":5}/)
+    }.to raise_formatted_error(%{{ "bar": 5 }})
   end
 
   it "contains the body in the failure message when negated" do
@@ -80,7 +80,7 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect {
       expect(response_for([])).not_to match_response_schema("foo")
-    }.to raise_error(/\[\]/)
+    }.to raise_formatted_error("[ ]")
   end
 
   it "contains the schema in the failure message" do
@@ -89,7 +89,7 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect {
       expect(response_for("bar" => 5)).to match_response_schema("foo")
-    }.to raise_error(/#{schema.to_json}/)
+    }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
   it "contains the schema in the failure message when negated" do
@@ -98,7 +98,7 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect {
       expect(response_for([])).not_to match_response_schema("foo")
-    }.to raise_error(/#{schema.to_json}/)
+    }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
   it "does not fail when the schema matches" do
@@ -128,5 +128,11 @@ describe JsonMatchers, "#match_response_schema" do
 
     expect(valid_response).to match_response_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
+  end
+
+  def raise_formatted_error(error_message)
+    raise_error do |error|
+      expect(error.message.squish).to include(error_message)
+    end
   end
 end
