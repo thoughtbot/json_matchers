@@ -18,7 +18,7 @@ module JsonMatchers
 
 expected
 
-#{pretty_json(response.body)}
+#{pretty_json(response)}
 
 to match schema "#{schema_name}":
 
@@ -35,7 +35,7 @@ to match schema "#{schema_name}":
 
 expected
 
-#{pretty_json(response.body)}
+#{pretty_json(response)}
 
 not to match schema "#{schema_name}":
 
@@ -46,7 +46,8 @@ not to match schema "#{schema_name}":
 
     private
 
-    def pretty_json(json_string)
+    def pretty_json(response)
+      json_string = response.respond_to?(:body) ? response.body : response
       JSON.pretty_generate(JSON.parse(json_string.to_s))
     end
 

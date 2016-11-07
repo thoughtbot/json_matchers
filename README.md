@@ -81,7 +81,7 @@ describe "GET /posts" do
     get posts_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response.body).to match_json_schema("posts")
+    expect(response.body).to match_response_schema("posts")
   end
 end
 ```
