@@ -1,4 +1,5 @@
 require "json-schema"
+require "json_matchers/payload"
 
 module JsonMatchers
   class Matcher
@@ -10,7 +11,7 @@ module JsonMatchers
     def matches?(response)
       JSON::Validator.validate!(
         schema_path.to_s,
-        json_from(response).to_s,
+        Payload.new(response).to_s,
         options,
       )
     rescue JSON::Schema::ValidationError => ex
@@ -27,14 +28,6 @@ module JsonMatchers
     private
 
     attr_reader :schema_path, :options
-
-    def json_from(response)
-      if response.respond_to?(:body)
-        response.body
-      else
-        response
-      end
-    end
 
     def default_options
       JsonMatchers.configuration.options || {}

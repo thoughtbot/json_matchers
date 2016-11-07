@@ -1,4 +1,5 @@
 require "json_matchers"
+require "json_matchers/payload"
 
 module JsonMatchers
   class RSpec < SimpleDelegator
@@ -18,7 +19,7 @@ module JsonMatchers
 
 expected
 
-#{pretty_json(response.body)}
+#{pretty_json(response)}
 
 to match schema "#{schema_name}":
 
@@ -35,7 +36,7 @@ to match schema "#{schema_name}":
 
 expected
 
-#{pretty_json(response.body)}
+#{pretty_json(response)}
 
 not to match schema "#{schema_name}":
 
@@ -46,8 +47,10 @@ not to match schema "#{schema_name}":
 
     private
 
-    def pretty_json(json_string)
-      JSON.pretty_generate(JSON.parse(json_string.to_s))
+    def pretty_json(response)
+      payload = Payload.new(response).to_s
+
+      JSON.pretty_generate(JSON.parse(payload))
     end
 
     def schema_path
