@@ -22,20 +22,30 @@ describe JsonMatchers, "#match_response_schema" do
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
 
-  it "validates a JSON string" do
-    create_schema("foo_schema", {
-      "type" => "object",
-      "required" => [
-        "id",
-      ],
-      "properties" => {
-        "id" => { "type" => "number" },
-      },
-      "additionalProperties" => false,
-    })
+  context "when JSON is a string" do
+    before(:each) do
+      create_schema("foo_schema", {
+        "type" => "object",
+        "required" => [
+          "id",
+        ],
+        "properties" => {
+          "id" => { "type" => "number" },
+        },
+        "additionalProperties" => false,
+      })
+    end
 
-    expect(response_for({ "id" => 1 }).body).
-      to match_response_schema("foo_schema")
+    it "validates when the schema matches" do
+      expect({ "id" => 1 }.to_json).
+        to match_response_schema("foo_schema")
+    end
+
+    it "fails with message when negated" do
+      expect {
+        expect({ "id" => "1" }.to_json).to match_response_schema("foo_schema")
+      }.to raise_formatted_error(%{{ "type": "number" }})
+    end
   end
 
   it "fails when the body contains a property with the wrong type" do
