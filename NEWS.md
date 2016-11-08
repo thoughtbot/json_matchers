@@ -1,6 +1,9 @@
 master
 ======
 
+0.6.3
+=====
+
 * Fix error message for string responses. [#49]
 
 [#49]: https://github.com/thoughtbot/json_matchers/pull/49
