@@ -165,6 +165,29 @@ describe JsonMatchers, "#match_response_schema" do
         config.options.delete(:strict)
       end
     end
+
+    context "when options specify to record errors" do
+      around do |example|
+        JsonMatchers.configure do |config|
+          config.options[:record_errors] = true
+        end
+
+        example.run
+
+        JsonMatchers.configure do |config|
+          config.options.delete(:record_errors)
+        end
+      end
+
+      it "fails when the body is missing a required property" do
+        create_schema("foo_schema", {
+          "type" => "object",
+          "required" => ["foo"],
+        })
+
+        expect(response_for({})).not_to match_response_schema("foo_schema")
+      end
+    end
   end
 
   def raise_formatted_error(error_message)
