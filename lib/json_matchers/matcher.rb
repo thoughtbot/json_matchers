@@ -9,13 +9,14 @@ module JsonMatchers
     end
 
     def matches?(response)
-      # validate! will not raise and will always return true if you configure the validator
-      # to record errors, so we must instead inspect fully_validate's errors response
+      # validate! will not raise and will always return true if you configure
+      # the validator to record errors, so we must instead inspect
+      # fully_validate's errors response
       if options[:record_errors]
         errors = JSON::Validator.fully_validate(
           schema_path.to_s,
           Payload.new(response).to_s,
-          options
+          options,
         )
 
         # errors is an array, but it will always only return a single item
@@ -29,7 +30,7 @@ module JsonMatchers
         JSON::Validator.validate!(
           schema_path.to_s,
           Payload.new(response).to_s,
-          options
+          options,
         )
       end
     rescue JSON::Schema::ValidationError => ex

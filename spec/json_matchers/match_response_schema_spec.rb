@@ -180,10 +180,10 @@ describe JsonMatchers, "#match_response_schema" do
       end
 
       it "fails when the body is missing a required property" do
-        create_schema("foo_schema", {
-          "type" => "object",
-          "required" => ["foo"],
-        })
+        create_schema("foo_schema",
+                       "type" => "object",
+                       "required" => ["foo"],
+                     )
 
         expect(response_for({})).not_to match_response_schema("foo_schema")
       end
