@@ -1,6 +1,12 @@
 master
 ======
 
+* Default `record_errors: true` [#52]
+* Add support for configuring `record_errors` [#51]
+
+[#52]: https://github.com/thoughtbot/json_matchers/pull/52
+[#51]: https://github.com/thoughtbot/json_matchers/pull/51
+
 0.6.3
 =====
 

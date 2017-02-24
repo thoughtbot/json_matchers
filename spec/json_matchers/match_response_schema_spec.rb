@@ -159,13 +159,24 @@ describe JsonMatchers, "#match_response_schema" do
     end
 
     context "when configured to record errors" do
-      it "fails when the body is missing a required property" do
+      it "includes the reasons for failure in the exception's message" do
         with_options(record_errors: true) do
-          create_schema("foo_schema",
-                        "type" => "object",
-                        "required" => ["foo"])
+          create_schema("foo_schema", {
+            "type" => "object",
+            "properties" => {
+              "username" => {
+                "allOf": [
+                  { "type": "string" },
+                  { "minLength": 5 }
+                ]
+              }
+            }
+          })
+          invalid_payload = response_for({ "username" => "foo" })
 
-          expect(response_for({})).not_to match_response_schema("foo_schema")
+          expect {
+            expect(invalid_payload).to match_response_schema("foo_schema")
+          }.to raise_error(/minimum/)
         end
       end
     end

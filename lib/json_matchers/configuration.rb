@@ -11,7 +11,9 @@ module JsonMatchers
     attr_reader :options
 
     def initialize
-      @options = {}
+      @options = {
+        record_errors: true,
+      }
     end
   end
 end
