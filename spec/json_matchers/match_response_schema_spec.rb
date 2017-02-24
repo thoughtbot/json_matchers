@@ -142,49 +142,31 @@ describe JsonMatchers, "#match_response_schema" do
 
   context "when options are configured globally" do
     it "forwards them to the validator" do
-      create_schema("foo_schema", {
-        "type" => "object",
-        "properties" => {
-          "id" => { "type" => "number" },
-          "title" => { "type" => "string" },
-        },
-      })
+      with_options(strict: true) do
+        create_schema("foo_schema", {
+          "type" => "object",
+          "properties" => {
+            "id" => { "type" => "number" },
+            "title" => { "type" => "string" },
+          },
+        })
 
-      JsonMatchers.configure do |config|
-        config.options[:strict] = true
-      end
-
-      expect(response_for({ "id" => 1, "title" => "bar" })).
-        to match_response_schema("foo_schema")
-      expect(response_for({ "id" => 1 })).
-        not_to match_response_schema("foo_schema")
-    end
-
-    after do
-      JsonMatchers.configure do |config|
-        config.options.delete(:strict)
+        expect(response_for({ "id" => 1, "title" => "bar" })).
+          to match_response_schema("foo_schema")
+        expect(response_for({ "id" => 1 })).
+          not_to match_response_schema("foo_schema")
       end
     end
 
-    context "when options specify to record errors" do
-      around do |example|
-        JsonMatchers.configure do |config|
-          config.options[:record_errors] = true
-        end
-
-        example.run
-
-        JsonMatchers.configure do |config|
-          config.options.delete(:record_errors)
-        end
-      end
-
+    context "when configured to record errors" do
       it "fails when the body is missing a required property" do
-        create_schema("foo_schema",
-                       "type" => "object",
-                       "required" => ["foo"])
+        with_options(record_errors: true) do
+          create_schema("foo_schema",
+                        "type" => "object",
+                        "required" => ["foo"])
 
-        expect(response_for({})).not_to match_response_schema("foo_schema")
+          expect(response_for({})).not_to match_response_schema("foo_schema")
+        end
       end
     end
   end
