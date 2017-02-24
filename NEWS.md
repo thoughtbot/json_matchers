@@ -1,6 +1,9 @@
 master
 ======
 
+0.7.0
+=====
+
 * Default `record_errors: true` [#52]
 * Add support for configuring `record_errors` [#51]
 
