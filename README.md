@@ -107,7 +107,7 @@ A list of available options can be found [here][options].
 
 [options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
 
-### Default matcher options
+### Global matcher options
 
 To configure the default options passed to *all* matchers, call
 `JsonMatchers.configure`:
@@ -122,7 +122,10 @@ end
 
 A list of available options can be found [here][options].
 
-[options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
+### Default matcher options
+
+* `record_errors: true` - *NOTE* `json_matchers` will always set
+  `record_errors: true`. This cannot be overridden.
 
 ### Embedding other Schemas
 

@@ -8,12 +8,12 @@ module JsonMatchers
   end
 
   class Configuration
-    attr_reader :options
-
     def initialize
-      @options = {
-        record_errors: true,
-      }
+      @options = {}
+    end
+
+    def options
+      @options.merge!(record_errors: true)
     end
   end
 end
