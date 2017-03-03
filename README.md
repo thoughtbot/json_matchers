@@ -102,6 +102,7 @@ describe "GET /posts" do
   end
 end
 ```
+The `strict` option is by default set to `true`.
 
 A list of available options can be found [here][options].
 
