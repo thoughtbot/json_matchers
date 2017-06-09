@@ -1,3 +1,4 @@
+require "delegate"
 require "json_matchers"
 require "json_matchers/payload"
 

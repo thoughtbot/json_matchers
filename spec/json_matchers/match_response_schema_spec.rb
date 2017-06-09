@@ -159,6 +159,24 @@ describe JsonMatchers, "#match_response_schema" do
     end
 
     context "when configured to record errors" do
+      it "includes the failure messages in strict mode" do
+        with_options(record_errors: true) do
+          create_schema("foo_schema", {
+            "type" => "object",
+            "properties" => {
+              "foo" => { "type" => "string" },
+            }
+          })
+          invalid_payload = response_for({ "bar" => "baz" })
+
+          expect {
+            expect(invalid_payload).to(
+              match_response_schema("foo_schema", strict: true),
+            )
+          }.to raise_error(/did not contain a required property/)
+        end
+      end
+
       it "includes the reasons for failure in the exception's message" do
         with_options(record_errors: true) do
           create_schema("foo_schema", {
