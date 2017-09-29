@@ -1,6 +1,14 @@
 master
 ======
 
+0.7.1
+=====
+
+* Accept Hash instances as arguments to `match_response_schema` [#58], [#59]
+
+[#58]: https://github.com/thoughtbot/json_matchers/pull/58
+[#59]: https://github.com/thoughtbot/json_matchers/pull/59
+
 0.7.0
 =====
 
