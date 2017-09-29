@@ -22,6 +22,25 @@ describe JsonMatchers, "#match_response_schema" do
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
 
+  context "when passed a Hash" do
+    before(:each) do
+      create_schema("foo_schema", {
+        "type" => "object",
+        "required" => [
+          "id",
+        ],
+        "properties" => {
+          "id" => { "type" => "number" },
+        },
+        "additionalProperties" => false,
+      })
+    end
+
+    it "validates when the schema matches" do
+      expect({ "id" => 1 }).to match_response_schema("foo_schema")
+    end
+  end
+
   context "when JSON is a string" do
     before(:each) do
       create_schema("foo_schema", {
