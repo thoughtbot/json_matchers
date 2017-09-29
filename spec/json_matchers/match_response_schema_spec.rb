@@ -23,7 +23,7 @@ describe JsonMatchers, "#match_response_schema" do
   end
 
   context "when passed a Hash" do
-    before(:each) do
+    it "validates when the schema matches" do
       create_schema("foo_schema", {
         "type" => "object",
         "required" => [
@@ -34,10 +34,25 @@ describe JsonMatchers, "#match_response_schema" do
         },
         "additionalProperties" => false,
       })
+
+      expect({ "id" => 1 }).to match_response_schema("foo_schema")
     end
 
-    it "validates when the schema matches" do
-      expect({ "id" => 1 }).to match_response_schema("foo_schema")
+    it "fails with message when negated" do
+      create_schema("foo_schema", {
+        "type" => "object",
+        "required" => [
+          "id",
+        ],
+        "properties" => {
+          "id" => { "type" => "number" },
+        },
+        "additionalProperties" => false,
+      })
+
+      expect {
+        expect({ "id" => "1" }).to match_response_schema("foo_schema")
+      }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
 

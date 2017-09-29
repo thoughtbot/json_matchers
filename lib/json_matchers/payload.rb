@@ -15,6 +15,8 @@ module JsonMatchers
     def extract_json_string(payload)
       if payload.respond_to?(:body)
         payload.body
+      elsif payload.respond_to?(:to_h)
+        payload.to_h.to_json
       else
         payload
       end
