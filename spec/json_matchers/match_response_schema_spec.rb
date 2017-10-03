@@ -56,6 +56,45 @@ describe JsonMatchers, "#match_response_schema" do
     end
   end
 
+  context "when passed a Array" do
+    it "validates when the schema matches" do
+      create_schema("foo_schema", {
+        "type" => "array",
+        "items" => {
+          "required" => [
+            "id",
+          ],
+          "properties" => {
+            "id" => { "type" => "number" },
+          },
+          "additionalProperties" => false,
+        }
+      })
+
+      expect([{ "id" => 1 }]).to match_response_schema("foo_schema")
+    end
+
+    it "fails with message when negated" do
+      create_schema("foo_schema", {
+        "type" => "array",
+        "items" => {
+          "type" => "object",
+          "required" => [
+            "id",
+          ],
+          "properties" => {
+            "id" => { "type" => "number" },
+          },
+          "additionalProperties" => false,
+        }
+      })
+
+      expect {
+        expect([{ "id" => "1" }]).to match_response_schema("foo_schema")
+      }.to raise_formatted_error(%{{ "type": "number" }})
+    end
+  end
+
   context "when JSON is a string" do
     before(:each) do
       create_schema("foo_schema", {
