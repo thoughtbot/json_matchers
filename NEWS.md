@@ -1,6 +1,9 @@
 master
 ======
 
+0.7.2
+=====
+
 * Accept Array instances as arguments to `match_response_schema` [#60]
 
 [#60]: https://github.com/thoughtbot/json_matchers/issues/60
