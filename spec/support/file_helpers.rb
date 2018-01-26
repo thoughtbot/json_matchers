@@ -33,8 +33,6 @@ end
 RSpec.configure do |config|
   config.include FileHelpers
 
-  config.before(:each) { JSON::Validator.clear_cache }
-
   config.around do |example|
     JsonMatchers.schema_root = File.join(Dir.pwd, "spec", "fixtures", "schemas")
     FileUtils.mkdir_p(JsonMatchers.schema_root)

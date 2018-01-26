@@ -7,14 +7,17 @@ describe JsonMatchers, "#match_response_schema" do
     }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
-  it "does not fail with an empty JSON body" do
+  it "fails with an empty JSON body" do
     create_schema("foo", {})
 
-    expect(response_for({})).to match_response_schema("foo")
+    expect {
+      expect(response_for({})).to match_response_schema("foo")
+    }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "fails when the body is missing a required property" do
     create_schema("foo_schema", {
+      "id": "",
       "type": "object",
       "required": ["foo"],
     })

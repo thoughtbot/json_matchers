@@ -1,3 +1,4 @@
+require "pathname"
 require "json_matchers/version"
 require "json_matchers/configuration"
 require "json_matchers/matcher"
