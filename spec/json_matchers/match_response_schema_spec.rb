@@ -14,10 +14,10 @@ describe JsonMatchers, "#match_response_schema" do
   end
 
   it "fails when the body is missing a required property" do
-    create_schema("foo_schema",
+    create_schema("foo_schema", {
       "type": "object",
       "required": ["foo"],
-    )
+    })
 
     expect(response_for({})).not_to match_response_schema("foo_schema")
   end
@@ -68,7 +68,7 @@ describe JsonMatchers, "#match_response_schema" do
             "id": { "type": "number" },
           },
           "additionalProperties": false,
-        }
+        },
       })
 
       expect([{ "id": 1 }]).to match_response_schema("foo_schema")
@@ -86,7 +86,7 @@ describe JsonMatchers, "#match_response_schema" do
             "id": { "type": "number" },
           },
           "additionalProperties": false,
-        }
+        },
       })
 
       expect {
@@ -126,7 +126,7 @@ describe JsonMatchers, "#match_response_schema" do
       "type": "object",
       "properties": {
         "foo": { "type": "string" },
-      }
+      },
     })
 
     expect(response_for("foo": 1)).
@@ -182,7 +182,7 @@ describe JsonMatchers, "#match_response_schema" do
       "required": ["foo"],
       "properties": {
         "foo": { "type": "string" },
-      }
+      },
     })
     create_schema("collection", {
       "type": "array",
@@ -240,10 +240,10 @@ describe JsonMatchers, "#match_response_schema" do
               "username": {
                 "allOf": [
                   { "type": "string" },
-                  { "minLength": 5 }
-                ]
-              }
-            }
+                  { "minLength": 5 },
+                ],
+              },
+            },
           })
           invalid_payload = response_for({ "username": "foo" })
 

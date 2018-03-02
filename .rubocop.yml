@@ -1,0 +1,17 @@
+inherit_from:
+  - '.thoughtbot.rubocop.yml'
+
+Style/BlockDelimiters:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/BracesAroundHashParameters:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Layout/IndentHash:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*_spec.rb'
