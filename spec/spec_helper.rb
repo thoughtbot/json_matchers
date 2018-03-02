@@ -10,4 +10,12 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
+
+  config.include FileHelpers
+
+  config.around do |example|
+    ensure_fixtures("spec", "fixtures", "schemas") do
+      example.run
+    end
+  end
 end

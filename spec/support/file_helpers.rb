@@ -2,10 +2,12 @@ require "fileutils"
 require "json"
 
 module FileHelpers
-  ORIGINAL_SCHEMA_ROOT = JsonMatchers.schema_root
+  FakeResponse = Struct.new(:body)
 
   def create_schema(name, json)
-    File.open("#{schema_root}/#{name}.json", "w") do |file|
+    path = File.join(JsonMatchers.schema_root, "#{name}.json")
+
+    File.open(path, "w") do |file|
       case json
       when NilClass, String
         file.write(json.to_s)
@@ -22,26 +24,29 @@ module FileHelpers
                     else
                       json.to_json
                     end
-    double(body: response_body)
+    FakeResponse.new(response_body)
   end
 
-  def schema_root
-    JsonMatchers.schema_root
-  end
-end
+  def setup_fixtures(*pathnames)
+    JSON::Validator.clear_cache
+    original_schema_root = JsonMatchers.schema_root
 
-RSpec.configure do |config|
-  config.include FileHelpers
-
-  config.before(:each) { JSON::Validator.clear_cache }
-
-  config.around do |example|
-    JsonMatchers.schema_root = File.join(Dir.pwd, "spec", "fixtures", "schemas")
+    JsonMatchers.schema_root = File.join(*pathnames)
     FileUtils.mkdir_p(JsonMatchers.schema_root)
 
-    example.run
+    original_schema_root
+  end
 
+  def teardown_fixtures(original_schema_root)
     FileUtils.rm_rf(JsonMatchers.schema_root)
-    JsonMatchers.schema_root = FileHelpers::ORIGINAL_SCHEMA_ROOT
+    JsonMatchers.schema_root = original_schema_root
+  end
+
+  def ensure_fixtures(*pathnames)
+    original_schema_root = setup_fixtures(*pathnames)
+
+    yield
+
+    teardown_fixtures(original_schema_root)
   end
 end
