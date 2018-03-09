@@ -56,7 +56,7 @@ Define your [JSON Schema](http://json-schema.org/example1.html) in the schema di
 }
 ```
 
-Then, validate `response` against your schema with `match_response_schema`
+Then, validate `response` against your schema with `match_json_schema`
 
 ```ruby
 # spec/requests/posts_spec.rb
@@ -66,12 +66,12 @@ describe "GET /posts" do
     get posts_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response).to match_response_schema("posts")
+    expect(response).to match_json_schema("posts")
   end
 end
 ```
 
-Alternatively, `match_response_schema` accepts a string:
+Alternatively, `match_json_schema` accepts a string:
 
 ```ruby
 # spec/requests/posts_spec.rb
@@ -81,7 +81,7 @@ describe "GET /posts" do
     get posts_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response.body).to match_response_schema("posts")
+    expect(response.body).to match_json_schema("posts")
   end
 end
 ```
@@ -98,7 +98,7 @@ describe "GET /posts" do
     get posts_path, format: :json
 
     expect(response.status).to eq 200
-    expect(response).to match_response_schema("posts", strict: true)
+    expect(response).to match_json_schema("posts", strict: true)
   end
 end
 ```

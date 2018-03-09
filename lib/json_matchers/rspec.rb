@@ -12,7 +12,7 @@ module JsonMatchers
       super(JsonMatchers::Matcher.new(schema_path, options))
     end
 
-    def failure_message(response)
+    def failure_message(json)
       <<-FAIL
 #{validation_failure_message}
 
@@ -20,7 +20,7 @@ module JsonMatchers
 
 expected
 
-#{pretty_json(response)}
+#{pretty_json(json)}
 
 to match schema "#{schema_name}":
 
@@ -29,7 +29,7 @@ to match schema "#{schema_name}":
       FAIL
     end
 
-    def failure_message_when_negated(response)
+    def failure_message_when_negated(json)
       <<-FAIL
 #{validation_failure_message}
 
@@ -37,7 +37,7 @@ to match schema "#{schema_name}":
 
 expected
 
-#{pretty_json(response)}
+#{pretty_json(json)}
 
 not to match schema "#{schema_name}":
 
@@ -48,8 +48,8 @@ not to match schema "#{schema_name}":
 
     private
 
-    def pretty_json(response)
-      payload = Payload.new(response).to_s
+    def pretty_json(json)
+      payload = Payload.new(json).to_s
 
       JSON.pretty_generate(JSON.parse(payload))
     end
@@ -65,29 +65,30 @@ not to match schema "#{schema_name}":
 end
 
 if RSpec.respond_to?(:configure)
-  RSpec::Matchers.define :match_response_schema do |schema_name, **options|
+  RSpec::Matchers.define :match_json_schema do |schema_name, **options|
     matcher = JsonMatchers::RSpec.new(schema_name, options)
 
-    match do |response|
-      matcher.matches?(response)
+    match do |json|
+      matcher.matches?(json)
     end
 
     if respond_to?(:failure_message)
-      failure_message do |response|
-        matcher.failure_message(response)
+      failure_message do |json|
+        matcher.failure_message(json)
       end
 
-      failure_message_when_negated do |response|
-        matcher.failure_message_when_negated(response)
+      failure_message_when_negated do |json|
+        matcher.failure_message_when_negated(json)
       end
     else
-      failure_message_for_should do |response|
-        matcher.failure_message(response)
+      failure_message_for_should do |json|
+        matcher.failure_message(json)
       end
 
-      failure_message_for_should_not do |response|
-        matcher.failure_message_when_negated(response)
+      failure_message_for_should_not do |json|
+        matcher.failure_message_when_negated(json)
       end
     end
   end
+  RSpec::Matchers.alias_matcher :match_response_schema, :match_json_schema
 end

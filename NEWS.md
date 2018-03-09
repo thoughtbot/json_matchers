@@ -1,6 +1,12 @@
 master
 ======
 
+* Alias `match_response_schema` to `match_json_schema`. These matches can
+  validate any JSON, whether it's from a request body, a response body, a Hash,
+  or a String. [#68]
+
+[#68]: https://github.com/thoughtbot/json_matchers/pull/68
+
 0.7.2
 =====
 

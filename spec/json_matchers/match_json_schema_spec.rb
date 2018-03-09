@@ -1,16 +1,16 @@
-describe JsonMatchers, "#match_response_schema" do
+describe JsonMatchers, "#match_json_schema" do
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 
     expect {
-      expect(response_for("")).to match_response_schema("foo")
+      expect(response_for("")).to match_json_schema("foo")
     }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do
     create_schema("foo", {})
 
-    expect(response_for({})).to match_response_schema("foo")
+    expect(response_for({})).to match_json_schema("foo")
   end
 
   it "fails when the body is missing a required property" do
@@ -19,7 +19,7 @@ describe JsonMatchers, "#match_response_schema" do
       "required": ["foo"],
     })
 
-    expect(response_for({})).not_to match_response_schema("foo_schema")
+    expect(response_for({})).not_to match_json_schema("foo_schema")
   end
 
   context "when passed a Hash" do
@@ -35,7 +35,7 @@ describe JsonMatchers, "#match_response_schema" do
         "additionalProperties": false,
       })
 
-      expect({ "id": 1 }).to match_response_schema("foo_schema")
+      expect({ "id": 1 }).to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -51,7 +51,7 @@ describe JsonMatchers, "#match_response_schema" do
       })
 
       expect {
-        expect({ "id": "1" }).to match_response_schema("foo_schema")
+        expect({ "id": "1" }).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -71,7 +71,7 @@ describe JsonMatchers, "#match_response_schema" do
         },
       })
 
-      expect([{ "id": 1 }]).to match_response_schema("foo_schema")
+      expect([{ "id": 1 }]).to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -90,7 +90,7 @@ describe JsonMatchers, "#match_response_schema" do
       })
 
       expect {
-        expect([{ "id": "1" }]).to match_response_schema("foo_schema")
+        expect([{ "id": "1" }]).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -111,12 +111,12 @@ describe JsonMatchers, "#match_response_schema" do
 
     it "validates when the schema matches" do
       expect({ "id": 1 }.to_json).
-        to match_response_schema("foo_schema")
+        to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
       expect {
-        expect({ "id": "1" }.to_json).to match_response_schema("foo_schema")
+        expect({ "id": "1" }.to_json).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -130,14 +130,14 @@ describe JsonMatchers, "#match_response_schema" do
     })
 
     expect(response_for("foo": 1)).
-      not_to match_response_schema("foo_schema")
+      not_to match_json_schema("foo_schema")
   end
 
   it "contains the body in the failure message" do
     create_schema("foo", { "type": "array" })
 
     expect {
-      expect(response_for("bar": 5)).to match_response_schema("foo")
+      expect(response_for("bar": 5)).to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "bar": 5 }})
   end
 
@@ -145,7 +145,7 @@ describe JsonMatchers, "#match_response_schema" do
     create_schema("foo", { "type": "array" })
 
     expect {
-      expect(response_for([])).not_to match_response_schema("foo")
+      expect(response_for([])).not_to match_json_schema("foo")
     }.to raise_formatted_error("[ ]")
   end
 
@@ -154,7 +154,7 @@ describe JsonMatchers, "#match_response_schema" do
     create_schema("foo", schema)
 
     expect {
-      expect(response_for("bar": 5)).to match_response_schema("foo")
+      expect(response_for("bar": 5)).to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
@@ -163,7 +163,7 @@ describe JsonMatchers, "#match_response_schema" do
     create_schema("foo", schema)
 
     expect {
-      expect(response_for([])).not_to match_response_schema("foo")
+      expect(response_for([])).not_to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
@@ -173,7 +173,7 @@ describe JsonMatchers, "#match_response_schema" do
       "items": { "type": "string" },
     })
 
-    expect(response_for(["valid"])).to match_response_schema("array_schema")
+    expect(response_for(["valid"])).to match_json_schema("array_schema")
   end
 
   it "supports $ref" do
@@ -192,7 +192,9 @@ describe JsonMatchers, "#match_response_schema" do
     valid_response = response_for([{ "foo": "is a string" }])
     invalid_response = response_for([{ "foo": 0 }])
 
+    expect(valid_response).to match_json_schema("collection")
     expect(valid_response).to match_response_schema("collection")
+    expect(invalid_response).not_to match_json_schema("collection")
     expect(invalid_response).not_to match_response_schema("collection")
   end
 
@@ -207,9 +209,9 @@ describe JsonMatchers, "#match_response_schema" do
       })
 
       expect(response_for({ "id": 1, "title": "bar" })).
-        to match_response_schema("foo_schema", strict: true)
+        to match_json_schema("foo_schema", strict: true)
       expect(response_for({ "id": 1 })).
-        not_to match_response_schema("foo_schema", strict: true)
+        not_to match_json_schema("foo_schema", strict: true)
     end
   end
 
@@ -225,9 +227,9 @@ describe JsonMatchers, "#match_response_schema" do
         })
 
         expect(response_for({ "id": 1, "title": "bar" })).
-          to match_response_schema("foo_schema")
+          to match_json_schema("foo_schema")
         expect(response_for({ "id": 1 })).
-          not_to match_response_schema("foo_schema")
+          not_to match_json_schema("foo_schema")
       end
     end
 
@@ -248,7 +250,7 @@ describe JsonMatchers, "#match_response_schema" do
           invalid_payload = response_for({ "username": "foo" })
 
           expect {
-            expect(invalid_payload).to match_response_schema("foo_schema")
+            expect(invalid_payload).to match_json_schema("foo_schema")
           }.to raise_error(/minimum/)
         end
       end
