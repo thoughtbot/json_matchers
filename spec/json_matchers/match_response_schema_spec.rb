@@ -2,19 +2,19 @@ describe JsonMatchers, "#match_response_schema" do
   it "fails with an invalid JSON body" do
     create_schema("foo", "")
 
-    response = response_for("")
+    json = response_for("")
 
     expect {
-      expect(response).to match_response_schema("foo")
+      expect(json).to match_response_schema("foo")
     }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do
     create_schema("foo", {})
 
-    response = response_for({})
+    json = response_for({})
 
-    expect(response).to match_response_schema("foo")
+    expect(json).to match_response_schema("foo")
   end
 
   it "fails when the body is missing a required property" do
@@ -23,9 +23,9 @@ describe JsonMatchers, "#match_response_schema" do
       "required": ["foo"],
     })
 
-    response = response_for({})
+    json = response_for({})
 
-    expect(response).not_to match_response_schema("foo_schema")
+    expect(json).not_to match_response_schema("foo_schema")
   end
 
   context "when passed a Hash" do
@@ -41,9 +41,9 @@ describe JsonMatchers, "#match_response_schema" do
         "additionalProperties": false,
       })
 
-      response = { "id": 1 }
+      json = { "id": 1 }
 
-      expect(response).to match_response_schema("foo_schema")
+      expect(json).to match_response_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -58,10 +58,10 @@ describe JsonMatchers, "#match_response_schema" do
         "additionalProperties": false,
       })
 
-      response = { "id": "1" }
+      json = { "id": "1" }
 
       expect {
-        expect(response).to match_response_schema("foo_schema")
+        expect(json).to match_response_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -81,9 +81,9 @@ describe JsonMatchers, "#match_response_schema" do
         },
       })
 
-      response = [{ "id": 1 }]
+      json = [{ "id": 1 }]
 
-      expect(response).to match_response_schema("foo_schema")
+      expect(json).to match_response_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -101,10 +101,10 @@ describe JsonMatchers, "#match_response_schema" do
         },
       })
 
-      response = [{ "id": "1" }]
+      json = [{ "id": "1" }]
 
       expect {
-        expect(response).to match_response_schema("foo_schema")
+        expect(json).to match_response_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -122,9 +122,9 @@ describe JsonMatchers, "#match_response_schema" do
         "additionalProperties": false,
       })
 
-      response = { "id": 1 }.to_json
+      json = { "id": 1 }.to_json
 
-      expect(response).
+      expect(json).
         to match_response_schema("foo_schema")
     end
 
@@ -140,10 +140,10 @@ describe JsonMatchers, "#match_response_schema" do
         "additionalProperties": false,
       })
 
-      response = { "id": "1" }.to_json
+      json = { "id": "1" }.to_json
 
       expect {
-        expect(response).to match_response_schema("foo_schema")
+        expect(json).to match_response_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -156,49 +156,49 @@ describe JsonMatchers, "#match_response_schema" do
       },
     })
 
-    response = response_for({ "foo": 1 })
+    json = response_for({ "foo": 1 })
 
-    expect(response).
+    expect(json).
       not_to match_response_schema("foo_schema")
   end
 
   it "contains the body in the failure message" do
     create_schema("foo", { "type": "array" })
 
-    response = response_for({ "bar": 5 })
+    json = response_for({ "bar": 5 })
 
     expect {
-      expect(response).to match_response_schema("foo")
+      expect(json).to match_response_schema("foo")
     }.to raise_formatted_error(%{{ "bar": 5 }})
   end
 
   it "contains the body in the failure message when negated" do
     create_schema("foo", { "type": "array" })
 
-    response = response_for([])
+    json = response_for([])
 
     expect {
-      expect(response).not_to match_response_schema("foo")
+      expect(json).not_to match_response_schema("foo")
     }.to raise_formatted_error("[ ]")
   end
 
   it "contains the schema in the failure message" do
     create_schema("foo", { "type": "array" })
 
-    response = response_for({ "bar": 5 })
+    json = response_for({ "bar": 5 })
 
     expect {
-      expect(response).to match_response_schema("foo")
+      expect(json).to match_response_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
   it "contains the schema in the failure message when negated" do
     create_schema("foo", { "type": "array" })
 
-    response = response_for([])
+    json = response_for([])
 
     expect {
-      expect(response).not_to match_response_schema("foo")
+      expect(json).not_to match_response_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
@@ -208,9 +208,9 @@ describe JsonMatchers, "#match_response_schema" do
       "items": { "type": "string" },
     })
 
-    response = response_for(["valid"])
+    json = response_for(["valid"])
 
-    expect(response).to match_response_schema("array_schema")
+    expect(json).to match_response_schema("array_schema")
   end
 
   it "supports $ref" do
@@ -226,11 +226,11 @@ describe JsonMatchers, "#match_response_schema" do
       "items": { "$ref": "single.json" },
     })
 
-    valid_response = response_for([{ "foo": "is a string" }])
-    invalid_response = response_for([{ "foo": 0 }])
+    valid_json = response_for([{ "foo": "is a string" }])
+    invalid_json = response_for([{ "foo": 0 }])
 
-    expect(valid_response).to match_response_schema("collection")
-    expect(invalid_response).not_to match_response_schema("collection")
+    expect(valid_json).to match_response_schema("collection")
+    expect(invalid_json).not_to match_response_schema("collection")
   end
 
   context "when options are passed directly to the matcher" do
@@ -243,12 +243,12 @@ describe JsonMatchers, "#match_response_schema" do
         },
       })
 
-      valid_response = response_for({ "id": 1, "title": "bar" })
-      invalid_response = response_for({ "id": 1 })
+      valid_json = response_for({ "id": 1, "title": "bar" })
+      invalid_json = response_for({ "id": 1 })
 
-      expect(valid_response).
+      expect(valid_json).
         to match_response_schema("foo_schema", strict: true)
-      expect(invalid_response).
+      expect(invalid_json).
         not_to match_response_schema("foo_schema", strict: true)
     end
   end
@@ -264,11 +264,11 @@ describe JsonMatchers, "#match_response_schema" do
           },
         })
 
-        valid_response = response_for({ "id": 1, "title": "bar" })
-        invalid_response = response_for({ "id": 1 })
+        valid_json = response_for({ "id": 1, "title": "bar" })
+        invalid_json = response_for({ "id": 1 })
 
-        expect(valid_response).to match_response_schema("foo_schema")
-        expect(invalid_response).not_to match_response_schema("foo_schema")
+        expect(valid_json).to match_response_schema("foo_schema")
+        expect(invalid_json).not_to match_response_schema("foo_schema")
       end
     end
 
