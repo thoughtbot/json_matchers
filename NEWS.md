@@ -1,6 +1,9 @@
 master
 ======
 
+0.7.3
+=====
+
 * Alias `match_response_schema` to `match_json_schema`. These matches can
   validate any JSON, whether it's from a request body, a response body, a Hash,
   or a String. [#68]
