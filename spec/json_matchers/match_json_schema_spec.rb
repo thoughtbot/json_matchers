@@ -1,16 +1,20 @@
 describe JsonMatchers, "#match_json_schema" do
-  it "fails with an invalid JSON body" do
+  it "fails with an invalid JSON schema" do
     create_schema("foo", "")
 
+    json = build(:response)
+
     expect {
-      expect(response_for("")).to match_json_schema("foo")
+      expect(json).to match_json_schema("foo")
     }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do
     create_schema("foo", {})
 
-    expect(response_for({})).to match_json_schema("foo")
+    json = build(:response, {})
+
+    expect(json).to match_json_schema("foo")
   end
 
   it "fails when the body is missing a required property" do
@@ -19,7 +23,9 @@ describe JsonMatchers, "#match_json_schema" do
       "required": ["foo"],
     })
 
-    expect(response_for({})).not_to match_json_schema("foo_schema")
+    json = build(:response, {})
+
+    expect(json).not_to match_json_schema("foo_schema")
   end
 
   context "when passed a Hash" do
@@ -129,23 +135,28 @@ describe JsonMatchers, "#match_json_schema" do
       },
     })
 
-    expect(response_for("foo": 1)).
-      not_to match_json_schema("foo_schema")
+    json = build(:response, { "foo": 1 })
+
+    expect(json).not_to match_json_schema("foo_schema")
   end
 
   it "contains the body in the failure message" do
     create_schema("foo", { "type": "array" })
 
+    json = build(:response, { "bar": 5 })
+
     expect {
-      expect(response_for("bar": 5)).to match_json_schema("foo")
+      expect(json).to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "bar": 5 }})
   end
 
   it "contains the body in the failure message when negated" do
     create_schema("foo", { "type": "array" })
 
+    json = build(:response, body: "[]")
+
     expect {
-      expect(response_for([])).not_to match_json_schema("foo")
+      expect(json).not_to match_json_schema("foo")
     }.to raise_formatted_error("[ ]")
   end
 
@@ -153,8 +164,10 @@ describe JsonMatchers, "#match_json_schema" do
     schema = { "type": "array" }
     create_schema("foo", schema)
 
+    json = build(:response, { "bar": 5 })
+
     expect {
-      expect(response_for("bar": 5)).to match_json_schema("foo")
+      expect(json).to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
@@ -162,8 +175,10 @@ describe JsonMatchers, "#match_json_schema" do
     schema = { "type": "array" }
     create_schema("foo", schema)
 
+    json = build(:response, body: "[]")
+
     expect {
-      expect(response_for([])).not_to match_json_schema("foo")
+      expect(json).not_to match_json_schema("foo")
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
@@ -173,7 +188,9 @@ describe JsonMatchers, "#match_json_schema" do
       "items": { "type": "string" },
     })
 
-    expect(response_for(["valid"])).to match_json_schema("array_schema")
+    json = build(:response, body: ["valid"])
+
+    expect(json).to match_json_schema("array_schema")
   end
 
   it "supports $ref" do
@@ -189,8 +206,8 @@ describe JsonMatchers, "#match_json_schema" do
       "items": { "$ref": "single.json" },
     })
 
-    valid_response = response_for([{ "foo": "is a string" }])
-    invalid_response = response_for([{ "foo": 0 }])
+    valid_response = build(:response, body: [{ "foo": "is a string" }])
+    invalid_response = build(:response, body: [{ "foo": 0 }])
 
     expect(valid_response).to match_json_schema("collection")
     expect(valid_response).to match_response_schema("collection")
@@ -208,10 +225,11 @@ describe JsonMatchers, "#match_json_schema" do
         },
       })
 
-      expect(response_for({ "id": 1, "title": "bar" })).
-        to match_json_schema("foo_schema", strict: true)
-      expect(response_for({ "id": 1 })).
-        not_to match_json_schema("foo_schema", strict: true)
+      matching_json = build(:response, { "id": 1, "title": "bar" })
+      invalid_json = build(:response, { "id": 1 })
+
+      expect(matching_json).to match_json_schema("foo_schema", strict: true)
+      expect(invalid_json).not_to match_json_schema("foo_schema", strict: true)
     end
   end
 
@@ -226,10 +244,11 @@ describe JsonMatchers, "#match_json_schema" do
           },
         })
 
-        expect(response_for({ "id": 1, "title": "bar" })).
-          to match_json_schema("foo_schema")
-        expect(response_for({ "id": 1 })).
-          not_to match_json_schema("foo_schema")
+        matching_json = build(:response, { "id": 1, "title": "bar" })
+        invalid_json = build(:response, { "id": 1 })
+
+        expect(matching_json).to match_json_schema("foo_schema")
+        expect(invalid_json).not_to match_json_schema("foo_schema")
       end
     end
 
@@ -247,10 +266,10 @@ describe JsonMatchers, "#match_json_schema" do
               },
             },
           })
-          invalid_payload = response_for({ "username": "foo" })
+          invalid_json = build(:response, { "username": "foo" })
 
           expect {
-            expect(invalid_payload).to match_json_schema("foo_schema")
+            expect(invalid_json).to match_json_schema("foo_schema")
           }.to raise_error(/minimum/)
         end
       end
