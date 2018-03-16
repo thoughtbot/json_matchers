@@ -24,7 +24,7 @@ FactoryBot.define do
       FakeSchema.new(name, json_attribute || attributes_as_json)
     end
 
-    after :create do |schema, evaluator|
+    after :create do |schema|
       path = File.join(JsonMatchers.schema_root, "#{schema.name}.json")
       json = schema.json
 
