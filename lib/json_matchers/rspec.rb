@@ -7,7 +7,7 @@ module JsonMatchers
     attr_reader :schema_name
 
     def initialize(schema_name, **options)
-      @schema_name = schema_name
+      @schema_name = schema_name.to_s
 
       super(JsonMatchers::Matcher.new(schema_path, options))
     end

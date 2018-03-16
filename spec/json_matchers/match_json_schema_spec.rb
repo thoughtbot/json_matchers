@@ -1,36 +1,36 @@
 describe JsonMatchers, "#match_json_schema" do
   it "fails with an invalid JSON schema" do
-    create_schema("foo", "")
+    schema = create(:schema, :invalid)
 
     json = build(:response)
 
     expect {
-      expect(json).to match_json_schema("foo")
+      expect(json).to match_json_schema(schema)
     }.to raise_error(JsonMatchers::InvalidSchemaError)
   end
 
   it "does not fail with an empty JSON body" do
-    create_schema("foo", {})
+    schema = create(:schema, {})
 
     json = build(:response, {})
 
-    expect(json).to match_json_schema("foo")
+    expect(json).to match_json_schema(schema)
   end
 
   it "fails when the body is missing a required property" do
-    create_schema("foo_schema", {
+    schema = create(:schema, {
       "type": "object",
       "required": ["foo"],
     })
 
     json = build(:response, {})
 
-    expect(json).not_to match_json_schema("foo_schema")
+    expect(json).not_to match_json_schema(schema)
   end
 
   context "when passed a Hash" do
     it "validates when the schema matches" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "object",
         "required": [
           "id",
@@ -43,11 +43,11 @@ describe JsonMatchers, "#match_json_schema" do
 
       json = { "id": 1 }
 
-      expect(json).to match_json_schema("foo_schema")
+      expect(json).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "object",
         "required": [
           "id",
@@ -61,14 +61,14 @@ describe JsonMatchers, "#match_json_schema" do
       json = { "id": "1" }
 
       expect {
-        expect(json).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema(schema)
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
 
   context "when passed a Array" do
     it "validates when the schema matches" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "array",
         "items": {
           "required": [
@@ -83,11 +83,11 @@ describe JsonMatchers, "#match_json_schema" do
 
       json = [{ "id": 1 }]
 
-      expect(json).to match_json_schema("foo_schema")
+      expect(json).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "array",
         "items": {
           "type": "object",
@@ -104,14 +104,14 @@ describe JsonMatchers, "#match_json_schema" do
       json = [{ "id": "1" }]
 
       expect {
-        expect(json).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema(schema)
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
 
   context "when JSON is a string" do
     it "validates when the schema matches" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "object",
         "required": [
           "id",
@@ -124,11 +124,11 @@ describe JsonMatchers, "#match_json_schema" do
 
       json = { "id": 1 }.to_json
 
-      expect(json).to match_json_schema("foo_schema")
+      expect(json).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "object",
         "required": [
           "id",
@@ -142,13 +142,13 @@ describe JsonMatchers, "#match_json_schema" do
       json = { "id": "1" }.to_json
 
       expect {
-        expect(json).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema(schema)
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
 
   it "fails when the body contains a property with the wrong type" do
-    create_schema("foo_schema", {
+    schema = create(:schema, {
       "type": "object",
       "properties": {
         "foo": { "type": "string" },
@@ -157,87 +157,85 @@ describe JsonMatchers, "#match_json_schema" do
 
     json = build(:response, { "foo": 1 })
 
-    expect(json).not_to match_json_schema("foo_schema")
+    expect(json).not_to match_json_schema(schema)
   end
 
   it "contains the body in the failure message" do
-    create_schema("foo", { "type": "array" })
+    schema = create(:schema, { "type": "array" })
 
     json = build(:response, { "bar": 5 })
 
     expect {
-      expect(json).to match_json_schema("foo")
+      expect(json).to match_json_schema(schema)
     }.to raise_formatted_error(%{{ "bar": 5 }})
   end
 
   it "contains the body in the failure message when negated" do
-    create_schema("foo", { "type": "array" })
+    schema = create(:schema, { "type": "array" })
 
     json = build(:response, body: "[]")
 
     expect {
-      expect(json).not_to match_json_schema("foo")
+      expect(json).not_to match_json_schema(schema)
     }.to raise_formatted_error("[ ]")
   end
 
   it "contains the schema in the failure message" do
-    schema = { "type": "array" }
-    create_schema("foo", schema)
+    schema = create(:schema, { "type": "array" })
 
     json = build(:response, { "bar": 5 })
 
     expect {
-      expect(json).to match_json_schema("foo")
+      expect(json).to match_json_schema(schema)
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
   it "contains the schema in the failure message when negated" do
-    schema = { "type": "array" }
-    create_schema("foo", schema)
+    schema = create(:schema, { "type": "array" })
 
     json = build(:response, body: "[]")
 
     expect {
-      expect(json).not_to match_json_schema("foo")
+      expect(json).not_to match_json_schema(schema)
     }.to raise_formatted_error(%{{ "type": "array" }})
   end
 
   it "does not fail when the schema matches" do
-    create_schema("array_schema", {
+    schema = create(:schema, {
       "type": "array",
       "items": { "type": "string" },
     })
 
     json = build(:response, body: ["valid"])
 
-    expect(json).to match_json_schema("array_schema")
+    expect(json).to match_json_schema(schema)
   end
 
   it "supports $ref" do
-    create_schema("single", {
+    nested = create(:schema, {
       "type": "object",
       "required": ["foo"],
       "properties": {
         "foo": { "type": "string" },
       },
     })
-    create_schema("collection", {
+    collection = create(:schema, {
       "type": "array",
-      "items": { "$ref": "single.json" },
+      "items": { "$ref": "#{nested.name}.json" },
     })
 
     valid_response = build(:response, body: [{ "foo": "is a string" }])
     invalid_response = build(:response, body: [{ "foo": 0 }])
 
-    expect(valid_response).to match_json_schema("collection")
-    expect(valid_response).to match_response_schema("collection")
-    expect(invalid_response).not_to match_json_schema("collection")
-    expect(invalid_response).not_to match_response_schema("collection")
+    expect(valid_response).to match_json_schema(collection)
+    expect(valid_response).to match_response_schema(collection)
+    expect(invalid_response).not_to match_json_schema(collection)
+    expect(invalid_response).not_to match_response_schema(collection)
   end
 
   context "when options are passed directly to the matcher" do
     it "forwards options to the validator" do
-      create_schema("foo_schema", {
+      schema = create(:schema, {
         "type": "object",
         "properties": {
           "id": { "type": "number" },
@@ -248,15 +246,15 @@ describe JsonMatchers, "#match_json_schema" do
       matching_json = build(:response, { "id": 1, "title": "bar" })
       invalid_json = build(:response, { "id": 1 })
 
-      expect(matching_json).to match_json_schema("foo_schema", strict: true)
-      expect(invalid_json).not_to match_json_schema("foo_schema", strict: true)
+      expect(matching_json).to match_json_schema(schema, strict: true)
+      expect(invalid_json).not_to match_json_schema(schema, strict: true)
     end
   end
 
   context "when options are configured globally" do
     it "forwards them to the validator" do
       with_options(strict: true) do
-        create_schema("foo_schema", {
+        schema = create(:schema, {
           "type": "object",
           "properties": {
             "id": { "type": "number" },
@@ -267,15 +265,15 @@ describe JsonMatchers, "#match_json_schema" do
         matching_json = build(:response, { "id": 1, "title": "bar" })
         invalid_json = build(:response, { "id": 1 })
 
-        expect(matching_json).to match_json_schema("foo_schema")
-        expect(invalid_json).not_to match_json_schema("foo_schema")
+        expect(matching_json).to match_json_schema(schema)
+        expect(invalid_json).not_to match_json_schema(schema)
       end
     end
 
     context "when configured to record errors" do
       it "includes the reasons for failure in the exception's message" do
         with_options(record_errors: true) do
-          create_schema("foo_schema", {
+          schema = create(:schema, {
             "type": "object",
             "properties": {
               "username": {
@@ -290,7 +288,7 @@ describe JsonMatchers, "#match_json_schema" do
           invalid_json = build(:response, { "username": "foo" })
 
           expect {
-            expect(invalid_json).to match_json_schema("foo_schema")
+            expect(invalid_json).to match_json_schema(schema)
           }.to raise_error(/minimum/)
         end
       end
