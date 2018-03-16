@@ -41,7 +41,9 @@ describe JsonMatchers, "#match_json_schema" do
         "additionalProperties": false,
       })
 
-      expect({ "id": 1 }).to match_json_schema("foo_schema")
+      json = { "id": 1 }
+
+      expect(json).to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -56,8 +58,10 @@ describe JsonMatchers, "#match_json_schema" do
         "additionalProperties": false,
       })
 
+      json = { "id": "1" }
+
       expect {
-        expect({ "id": "1" }).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -77,7 +81,9 @@ describe JsonMatchers, "#match_json_schema" do
         },
       })
 
-      expect([{ "id": 1 }]).to match_json_schema("foo_schema")
+      json = [{ "id": 1 }]
+
+      expect(json).to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
@@ -95,14 +101,16 @@ describe JsonMatchers, "#match_json_schema" do
         },
       })
 
+      json = [{ "id": "1" }]
+
       expect {
-        expect([{ "id": "1" }]).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
 
   context "when JSON is a string" do
-    before(:each) do
+    it "validates when the schema matches" do
       create_schema("foo_schema", {
         "type": "object",
         "required": [
@@ -113,16 +121,28 @@ describe JsonMatchers, "#match_json_schema" do
         },
         "additionalProperties": false,
       })
-    end
 
-    it "validates when the schema matches" do
-      expect({ "id": 1 }.to_json).
-        to match_json_schema("foo_schema")
+      json = { "id": 1 }.to_json
+
+      expect(json).to match_json_schema("foo_schema")
     end
 
     it "fails with message when negated" do
+      create_schema("foo_schema", {
+        "type": "object",
+        "required": [
+          "id",
+        ],
+        "properties": {
+          "id": { "type": "number" },
+        },
+        "additionalProperties": false,
+      })
+
+      json = { "id": "1" }.to_json
+
       expect {
-        expect({ "id": "1" }.to_json).to match_json_schema("foo_schema")
+        expect(json).to match_json_schema("foo_schema")
       }.to raise_formatted_error(%{{ "type": "number" }})
     end
   end
@@ -266,6 +286,7 @@ describe JsonMatchers, "#match_json_schema" do
               },
             },
           })
+
           invalid_json = build(:response, { "username": "foo" })
 
           expect {
