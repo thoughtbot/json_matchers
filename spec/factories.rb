@@ -1,8 +1,16 @@
 require "json_matchers/payload"
 
 FactoryBot.define do
-  FakeResponse = Struct.new(:body)
+  FakeResponse = Struct.new(:body) do
+    def to_h
+      JSON.parse(body)
+    end
+  end
   FakeSchema = Struct.new(:name, :json) do
+    def to_h
+      json
+    end
+
     def to_s
       name
     end

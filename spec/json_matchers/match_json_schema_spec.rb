@@ -64,7 +64,7 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_error_containing({ "type": "number" })
+      }.to raise_error_containing(schema)
     end
   end
 
@@ -129,7 +129,7 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_error_containing({ "type": "number" })
+      }.to raise_error_containing(schema)
     end
   end
 
@@ -167,7 +167,7 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_error_containing({ "type": "number" })
+      }.to raise_error_containing(schema)
     end
   end
 
@@ -197,11 +197,12 @@ describe JsonMatchers, "#match_json_schema" do
         "id": { "type": "number" },
       },
     })
-    json = build(:response, { "id": "5" })
+
+    json = build(:response, { "id": "1" })
 
     expect {
       expect(json).to match_json_schema(schema)
-    }.to raise_error_containing({ "id": "5" })
+    }.to raise_error_containing(json)
   end
 
   it "contains the body in the failure message when negated" do
@@ -214,11 +215,12 @@ describe JsonMatchers, "#match_json_schema" do
         "id": { "type": "number" },
       },
     })
-    json = build(:response, { "id": 5 })
+
+    json = build(:response, { "id": 1 })
 
     expect {
       expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing({ "id": 5 })
+    }.to raise_error_containing(json)
   end
 
   it "contains the schema in the failure message" do
@@ -228,18 +230,17 @@ describe JsonMatchers, "#match_json_schema" do
 
     expect {
       expect(json).to match_json_schema(schema)
-    }.to raise_error_containing({ "type": "array" })
+    }.to raise_error_containing(schema)
   end
 
   it "contains the schema in the failure message when negated" do
-    schema_json = { "type": "array" }
-    schema = create(:schema, schema_json)
+    schema = create(:schema, { "type": "array" })
 
     json = build(:response, body: "[]")
 
     expect {
       expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing(schema_json)
+    }.to raise_error_containing(schema)
   end
 
   it "supports $ref" do
@@ -314,19 +315,20 @@ describe JsonMatchers, "#match_json_schema" do
     end
   end
 
-  def raise_error_containing(error_message_schema)
+  def raise_error_containing(schema_or_body)
     raise_error do |error|
-      sanitized_message = error.message.
-        gsub(/\A[[:space:]]+/, "").
-        gsub(/[[:space:]]+\z/, "").
-        gsub(/[[:space:]]+/, " ")
-
-      error_message = JSON.pretty_generate(error_message_schema).
-        gsub(/\A[[:space:]]+/, "").
-        gsub(/[[:space:]]+\z/, "").
-        gsub(/[[:space:]]+/, " ")
+      sanitized_message = squish(error.message)
+      json = JSON.pretty_generate(schema_or_body.to_h)
+      error_message = squish(json)
 
       expect(sanitized_message).to include(error_message)
     end
+  end
+
+  def squish(string)
+    string.
+      gsub(/\A[[:space:]]+/, "").
+      gsub(/[[:space:]]+\z/, "").
+      gsub(/[[:space:]]+/, " ")
   end
 end
