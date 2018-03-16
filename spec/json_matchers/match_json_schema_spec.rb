@@ -20,7 +20,9 @@ describe JsonMatchers, "#match_json_schema" do
   it "fails when the body is missing a required property" do
     schema = create(:schema, {
       "type": "object",
-      "required": ["foo"],
+      "required": [
+        "id",
+      ],
     })
 
     json = build(:response, {})
@@ -62,7 +64,7 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_formatted_error(%{{ "type": "number" }})
+      }.to raise_error_containing({ "type": "number" })
     end
   end
 
@@ -86,6 +88,28 @@ describe JsonMatchers, "#match_json_schema" do
       expect(json).to match_json_schema(schema)
     end
 
+    it "validates a root-level Array in the JSON" do
+      schema = create(:schema, {
+        "type": "array",
+        "items": { "type": "string" },
+      })
+
+      json = build(:response, body: ["valid"])
+
+      expect(json).to match_json_schema(schema)
+    end
+
+    it "refutes a root-level Array in the JSON" do
+      schema = create(:schema, {
+        "type": "array",
+        "items": { "type": "string" },
+      })
+
+      json = build(:response, body: [1])
+
+      expect(json).not_to match_json_schema(schema)
+    end
+
     it "fails with message when negated" do
       schema = create(:schema, {
         "type": "array",
@@ -105,7 +129,7 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_formatted_error(%{{ "type": "number" }})
+      }.to raise_error_containing({ "type": "number" })
     end
   end
 
@@ -143,72 +167,79 @@ describe JsonMatchers, "#match_json_schema" do
 
       expect {
         expect(json).to match_json_schema(schema)
-      }.to raise_formatted_error(%{{ "type": "number" }})
+      }.to raise_error_containing({ "type": "number" })
     end
   end
 
   it "fails when the body contains a property with the wrong type" do
     schema = create(:schema, {
       "type": "object",
+      "required": [
+        "id",
+      ],
       "properties": {
-        "foo": { "type": "string" },
+        "id": { "type": "number" },
       },
     })
 
-    json = build(:response, { "foo": 1 })
+    json = build(:response, { "id": "1" })
 
     expect(json).not_to match_json_schema(schema)
   end
 
   it "contains the body in the failure message" do
-    schema = create(:schema, { "type": "array" })
-
-    json = build(:response, { "bar": 5 })
+    schema = create(:schema, {
+      "type": "object",
+      "required": [
+        "id",
+      ],
+      "properties": {
+        "id": { "type": "number" },
+      },
+    })
+    json = build(:response, { "id": "5" })
 
     expect {
       expect(json).to match_json_schema(schema)
-    }.to raise_formatted_error(%{{ "bar": 5 }})
+    }.to raise_error_containing({ "id": "5" })
   end
 
   it "contains the body in the failure message when negated" do
-    schema = create(:schema, { "type": "array" })
-
-    json = build(:response, body: "[]")
+    schema = create(:schema, {
+      "type": "object",
+      "required": [
+        "id",
+      ],
+      "properties": {
+        "id": { "type": "number" },
+      },
+    })
+    json = build(:response, { "id": 5 })
 
     expect {
       expect(json).not_to match_json_schema(schema)
-    }.to raise_formatted_error("[ ]")
+    }.to raise_error_containing({ "id": 5 })
   end
 
   it "contains the schema in the failure message" do
     schema = create(:schema, { "type": "array" })
 
-    json = build(:response, { "bar": 5 })
+    json = build(:response, { "id": 1 })
 
     expect {
       expect(json).to match_json_schema(schema)
-    }.to raise_formatted_error(%{{ "type": "array" }})
+    }.to raise_error_containing({ "type": "array" })
   end
 
   it "contains the schema in the failure message when negated" do
-    schema = create(:schema, { "type": "array" })
+    schema_json = { "type": "array" }
+    schema = create(:schema, schema_json)
 
     json = build(:response, body: "[]")
 
     expect {
       expect(json).not_to match_json_schema(schema)
-    }.to raise_formatted_error(%{{ "type": "array" }})
-  end
-
-  it "does not fail when the schema matches" do
-    schema = create(:schema, {
-      "type": "array",
-      "items": { "type": "string" },
-    })
-
-    json = build(:response, body: ["valid"])
-
-    expect(json).to match_json_schema(schema)
+    }.to raise_error_containing(schema_json)
   end
 
   it "supports $ref" do
@@ -235,16 +266,10 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when options are passed directly to the matcher" do
     it "forwards options to the validator" do
-      schema = create(:schema, {
-        "type": "object",
-        "properties": {
-          "id": { "type": "number" },
-          "title": { "type": "string" },
-        },
-      })
+      schema = create(:schema, :with_id)
 
-      matching_json = build(:response, { "id": 1, "title": "bar" })
-      invalid_json = build(:response, { "id": 1 })
+      matching_json = build(:response, { "id": 1 })
+      invalid_json = build(:response, { "id": 1, "title": "bar" })
 
       expect(matching_json).to match_json_schema(schema, strict: true)
       expect(invalid_json).not_to match_json_schema(schema, strict: true)
@@ -254,16 +279,10 @@ describe JsonMatchers, "#match_json_schema" do
   context "when options are configured globally" do
     it "forwards them to the validator" do
       with_options(strict: true) do
-        schema = create(:schema, {
-          "type": "object",
-          "properties": {
-            "id": { "type": "number" },
-            "title": { "type": "string" },
-          },
-        })
+        schema = create(:schema, :with_id)
 
-        matching_json = build(:response, { "id": 1, "title": "bar" })
-        invalid_json = build(:response, { "id": 1 })
+        matching_json = build(:response, { "id": 1 })
+        invalid_json = build(:response, { "id": 1, "title": "bar" })
 
         expect(matching_json).to match_json_schema(schema)
         expect(invalid_json).not_to match_json_schema(schema)
@@ -295,9 +314,14 @@ describe JsonMatchers, "#match_json_schema" do
     end
   end
 
-  def raise_formatted_error(error_message)
+  def raise_error_containing(error_message_schema)
     raise_error do |error|
       sanitized_message = error.message.
+        gsub(/\A[[:space:]]+/, "").
+        gsub(/[[:space:]]+\z/, "").
+        gsub(/[[:space:]]+/, " ")
+
+      error_message = JSON.pretty_generate(error_message_schema).
         gsub(/\A[[:space:]]+/, "").
         gsub(/[[:space:]]+\z/, "").
         gsub(/[[:space:]]+/, " ")
