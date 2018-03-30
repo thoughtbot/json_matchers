@@ -37,7 +37,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
-      json = { "id": 1 }
+      json = build(:response, :with_id).to_h
 
       expect(json).to match_json_schema(schema)
     end
@@ -45,7 +45,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "fails with message when negated" do
       schema = create(:schema, :with_id)
 
-      json = { "id": "1" }
+      json = build(:response, { "id": "1" }).to_h
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -57,26 +57,26 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates a root-level Array in the JSON" do
       schema = create(:schema, :array, :with_ids)
 
-      json = [{ "id": 1 }]
+      json = build(:response, :with_id).to_h
 
-      expect(json).to match_json_schema(schema)
+      expect([json]).to match_json_schema(schema)
     end
 
     it "refutes a root-level Array in the JSON" do
       schema = create(:schema, :array, :with_ids)
 
-      json = build(:response, body: ["invalid"])
+      json = build(:response, { "id": "1" }).to_h
 
-      expect(json).not_to match_json_schema(schema)
+      expect([json]).not_to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :array, :with_id)
 
-      json = [{ "id": "1" }]
+      json = build(:response, { "id": "1" }).to_h
 
       expect {
-        expect(json).to match_json_schema(schema)
+        expect([json]).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -85,7 +85,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
-      json = { "id": 1 }.to_json
+      json = build(:response, :with_id).to_json
 
       expect(json).to match_json_schema(schema)
     end
@@ -93,7 +93,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "fails with message when negated" do
       schema = create(:schema, :with_id)
 
-      json = { "id": "1" }.to_json
+      json = build(:response, { "id": "1" }).to_json
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -125,7 +125,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "when negated, contains the body" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, { "id": 1 })
+      json = build(:response, :with_id)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -135,7 +135,7 @@ describe JsonMatchers, "#match_json_schema" do
     it "when negated, contains the schema" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, { "id": 1 })
+      json = build(:response, :with_id)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -149,20 +149,20 @@ describe JsonMatchers, "#match_json_schema" do
       "$ref": "#{nested.name}.json",
     })
 
-    valid_response = build(:response, body: [{ "id": 1 }])
-    invalid_response = build(:response, body: [{ "id": "invalid" }])
+    valid_json = build(:response, body: [{ "id": 1 }])
+    invalid_json = build(:response, body: [{ "id": "1" }])
 
-    expect(valid_response).to match_json_schema(collection)
-    expect(valid_response).to match_response_schema(collection)
-    expect(invalid_response).not_to match_json_schema(collection)
-    expect(invalid_response).not_to match_response_schema(collection)
+    expect(valid_json).to match_json_schema(collection)
+    expect(valid_json).to match_response_schema(collection)
+    expect(invalid_json).not_to match_json_schema(collection)
+    expect(invalid_json).not_to match_response_schema(collection)
   end
 
   context "when options are passed directly to the matcher" do
     it "forwards options to the validator" do
       schema = create(:schema, :with_id)
 
-      matching_json = build(:response, { "id": 1 })
+      matching_json = build(:response, :with_id)
       invalid_json = build(:response, { "id": 1, "title": "bar" })
 
       expect(matching_json).to match_json_schema(schema, strict: true)
@@ -175,7 +175,7 @@ describe JsonMatchers, "#match_json_schema" do
       with_options(strict: true) do
         schema = create(:schema, :with_id)
 
-        matching_json = build(:response, { "id": 1 })
+        matching_json = build(:response, :with_id)
         invalid_json = build(:response, { "id": 1, "title": "bar" })
 
         expect(matching_json).to match_json_schema(schema)

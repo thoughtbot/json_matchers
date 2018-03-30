@@ -5,6 +5,10 @@ FactoryBot.define do
     def to_h
       JSON.parse(body)
     end
+
+    def to_json
+      body
+    end
   end
   FakeSchema = Struct.new(:name, :json) do
     def to_h
@@ -17,6 +21,10 @@ FactoryBot.define do
   end
 
   factory :response, class: FakeResponse do
+    trait :with_id do
+      body { { "id": 1 }.to_json }
+    end
+
     skip_create
 
     initialize_with do
