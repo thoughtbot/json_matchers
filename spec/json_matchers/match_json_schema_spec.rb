@@ -37,18 +37,20 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, :with_id).to_h
+      json = build(:response, :with_id)
+      json_as_hash = json.to_h
 
-      expect(json).to match_json_schema(schema)
+      expect(json_as_hash).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, :invalid_with_id).to_h
+      json = build(:response, :invalid_with_id)
+      json_as_hash = json.to_h
 
       expect {
-        expect(json).to match_json_schema(schema)
+        expect(json_as_hash).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -57,26 +59,29 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates a root-level Array in the JSON" do
       schema = create(:schema, :array, :with_ids)
 
-      json = build(:response, :with_id).to_h
+      json = build(:response, :with_id)
+      json_as_array = [json.to_h]
 
-      expect([json]).to match_json_schema(schema)
+      expect(json_as_array).to match_json_schema(schema)
     end
 
     it "refutes a root-level Array in the JSON" do
       schema = create(:schema, :array, :with_ids)
 
-      json = build(:response, :invalid_with_id).to_h
+      json = build(:response, :invalid_with_id)
+      json_as_array = [json.to_h]
 
-      expect([json]).not_to match_json_schema(schema)
+      expect(json_as_array).not_to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :array, :with_id)
 
-      json = build(:response, :invalid_with_id).to_h
+      json = build(:response, :invalid_with_id)
+      json_as_array = [json.to_h]
 
       expect {
-        expect([json]).to match_json_schema(schema)
+        expect(json_as_array).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -85,18 +90,20 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, :with_id).to_json
+      json = build(:response, :with_id)
+      json_as_string = json.to_json
 
-      expect(json).to match_json_schema(schema)
+      expect(json_as_string).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :with_id)
 
-      json = build(:response, :invalid_with_id).to_json
+      json = build(:response, :invalid_with_id)
+      json_as_string = json.to_json
 
       expect {
-        expect(json).to match_json_schema(schema)
+        expect(json_as_string).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
