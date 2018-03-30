@@ -37,18 +37,20 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :object)
 
-      json = build(:response, :object).to_h
+      json = build(:response, :object)
+      json_as_hash = json.to_h
 
-      expect(json).to match_json_schema(schema)
+      expect(json_as_hash).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :object)
 
-      json = build(:response, :invalid_object).to_h
+      json = build(:response, :invalid_object)
+      json_as_hash = json.to_h
 
       expect {
-        expect(json).to match_json_schema(schema)
+        expect(json_as_hash).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -57,26 +59,29 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates a root-level Array in the JSON" do
       schema = create(:schema, :array_of, :objects)
 
-      json = build(:response, :object).to_h
+      json = build(:response, :object)
+      json_as_array = [json.to_h]
 
-      expect([json]).to match_json_schema(schema)
+      expect(json_as_array).to match_json_schema(schema)
     end
 
     it "refutes a root-level Array in the JSON" do
       schema = create(:schema, :array_of, :objects)
 
-      json = build(:response, :invalid_object).to_h
+      json = build(:response, :invalid_object)
+      json_as_array = [json.to_h]
 
-      expect([json]).not_to match_json_schema(schema)
+      expect(json_as_array).not_to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :array_of, :object)
 
-      json = build(:response, :invalid_object).to_h
+      json = build(:response, :invalid_object)
+      json_as_array = [json.to_h]
 
       expect {
-        expect([json]).to match_json_schema(schema)
+        expect(json_as_array).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -85,18 +90,20 @@ describe JsonMatchers, "#match_json_schema" do
     it "validates that the schema matches" do
       schema = create(:schema, :object)
 
-      json = build(:response, :object).to_json
+      json = build(:response, :object)
+      json_as_string = json.to_json
 
-      expect(json).to match_json_schema(schema)
+      expect(json_as_string).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
       schema = create(:schema, :object)
 
-      json = build(:response, :invalid_object).to_json
+      json = build(:response, :invalid_object)
+      json_as_string = json.to_json
 
       expect {
-        expect(json).to match_json_schema(schema)
+        expect(json_as_string).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
   end
@@ -109,44 +116,46 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).not_to match_json_schema(schema)
   end
 
-  it "contains the body in the failure message" do
-    schema = create(:schema, :object)
+  describe "the failure message" do
+    it "contains the body" do
+      schema = create(:schema, :object)
 
-    json = build(:response, :invalid_object)
+      json = build(:response, :invalid_object)
 
-    expect {
-      expect(json).to match_json_schema(schema)
-    }.to raise_error_containing(json)
-  end
+      expect {
+        expect(json).to match_json_schema(schema)
+      }.to raise_error_containing(json)
+    end
 
-  it "contains the body in the failure message when negated" do
-    schema = create(:schema, :object)
+    it "contains the schema" do
+      schema = create(:schema, :object)
 
-    json = build(:response, :object)
+      json = build(:response, :invalid_object)
 
-    expect {
-      expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing(json)
-  end
+      expect {
+        expect(json).to match_json_schema(schema)
+      }.to raise_error_containing(schema)
+    end
 
-  it "contains the schema in the failure message" do
-    schema = create(:schema, :object)
+    it "when negated, contains the body" do
+      schema = create(:schema, :object)
 
-    json = build(:response, :invalid_object)
+      json = build(:response, :object)
 
-    expect {
-      expect(json).to match_json_schema(schema)
-    }.to raise_error_containing(schema)
-  end
+      expect {
+        expect(json).not_to match_json_schema(schema)
+      }.to raise_error_containing(json)
+    end
 
-  it "contains the schema in the failure message when negated" do
-    schema = create(:schema, { "type": "array" })
+    it "when negated, contains the schema" do
+      schema = create(:schema, :object)
 
-    json = build(:response, body: "[]")
+      json = build(:response, :object)
 
-    expect {
-      expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing(schema)
+      expect {
+        expect(json).not_to match_json_schema(schema)
+      }.to raise_error_containing(schema)
+    end
   end
 
   it "supports $ref" do
