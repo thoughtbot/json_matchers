@@ -52,9 +52,12 @@ FactoryBot.define do
 
     trait :array do
       initialize_with do
+        schema_body_as_json = attributes.fetch(:json, nil)
+        schema_body = attributes.except(:json, :name)
+
         FakeSchema.new(name, {
           "type": "array",
-          "items": json,
+          "items": schema_body_as_json || schema_body,
         })
       end
     end

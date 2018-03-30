@@ -17,6 +17,14 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).to match_json_schema(schema)
   end
 
+  it "fails when the body contains a property with the wrong type" do
+    schema = create(:schema, :with_id)
+
+    json = build(:response, { "id": "1" })
+
+    expect(json).not_to match_json_schema(schema)
+  end
+
   it "fails when the body is missing a required property" do
     schema = create(:schema, :with_id)
 
@@ -26,7 +34,7 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   context "when passed a Hash" do
-    it "validates when the schema matches" do
+    it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
       json = { "id": 1 }
@@ -74,7 +82,7 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   context "when JSON is a string" do
-    it "validates when the schema matches" do
+    it "validates that the schema matches" do
       schema = create(:schema, :with_id)
 
       json = { "id": 1 }.to_json
@@ -91,14 +99,6 @@ describe JsonMatchers, "#match_json_schema" do
         expect(json).to match_json_schema(schema)
       }.to raise_error_containing(schema)
     end
-  end
-
-  it "fails when the body contains a property with the wrong type" do
-    schema = create(:schema, :with_id)
-
-    json = build(:response, { "id": "1" })
-
-    expect(json).not_to match_json_schema(schema)
   end
 
   describe "the failure message" do
@@ -144,20 +144,13 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "supports $ref" do
-    nested = create(:schema, {
-      "type": "object",
-      "required": ["foo"],
-      "properties": {
-        "foo": { "type": "string" },
-      },
-    })
-    collection = create(:schema, {
-      "type": "array",
-      "items": { "$ref": "#{nested.name}.json" },
+    nested = create(:schema, :with_id)
+    collection = create(:schema, :array, {
+      "$ref": "#{nested.name}.json",
     })
 
-    valid_response = build(:response, body: [{ "foo": "is a string" }])
-    invalid_response = build(:response, body: [{ "foo": 0 }])
+    valid_response = build(:response, body: [{ "id": 1 }])
+    invalid_response = build(:response, body: [{ "id": "invalid" }])
 
     expect(valid_response).to match_json_schema(collection)
     expect(valid_response).to match_response_schema(collection)
