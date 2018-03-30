@@ -25,6 +25,10 @@ FactoryBot.define do
       body { { "id": 1 }.to_json }
     end
 
+    trait :invalid_with_id do
+      body { { "id": "1" }.to_json }
+    end
+
     skip_create
 
     initialize_with do
