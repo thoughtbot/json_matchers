@@ -20,7 +20,7 @@ FactoryBot.define do
     skip_create
 
     initialize_with do
-      body = attributes[:body]
+      body = attributes.fetch(:body, nil)
       payload = attributes.except(:body)
 
       FakeResponse.new(body || payload.to_json)
@@ -34,14 +34,38 @@ FactoryBot.define do
       json { "" }
     end
 
+    trait :with_id do
+      json do
+        {
+          "type": "object",
+          "required": [
+            "id",
+          ],
+          "properties": {
+            "id": { "type": "number" },
+          },
+          "additionalProperties": false,
+        }
+      end
+    end
+    trait(:with_ids) { with_id }
+
+    trait :array do
+      initialize_with do
+        FakeSchema.new(name, {
+          "type": "array",
+          "items": json,
+        })
+      end
+    end
+
     skip_create
 
     initialize_with do
-      name = attributes.fetch(:name)
-      json_attribute = attributes.fetch(:json, nil)
-      attributes_as_json = attributes.except(:json, :name)
+      schema_body_as_json = attributes.fetch(:json, nil)
+      schema_body = attributes.except(:json, :name)
 
-      FakeSchema.new(name, json_attribute || attributes_as_json)
+      FakeSchema.new(name, schema_body_as_json || schema_body)
     end
 
     after :create do |schema|
