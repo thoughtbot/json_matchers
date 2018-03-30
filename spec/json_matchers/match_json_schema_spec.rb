@@ -101,44 +101,46 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).not_to match_json_schema(schema)
   end
 
-  it "contains the body in the failure message" do
-    schema = create(:schema, :with_id)
+  describe "the failure message" do
+    it "contains the body" do
+      schema = create(:schema, :with_id)
 
-    json = build(:response, { "id": "1" })
+      json = build(:response, { "id": "1" })
 
-    expect {
-      expect(json).to match_json_schema(schema)
-    }.to raise_error_containing(json)
-  end
+      expect {
+        expect(json).to match_json_schema(schema)
+      }.to raise_error_containing(json)
+    end
 
-  it "contains the body in the failure message when negated" do
-    schema = create(:schema, :with_id)
+    it "contains the schema" do
+      schema = create(:schema, :with_id)
 
-    json = build(:response, { "id": 1 })
+      json = build(:response, { "id": "1" })
 
-    expect {
-      expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing(json)
-  end
+      expect {
+        expect(json).to match_json_schema(schema)
+      }.to raise_error_containing(schema)
+    end
 
-  it "contains the schema in the failure message" do
-    schema = create(:schema, { "type": "array" })
+    it "when negated, contains the body" do
+      schema = create(:schema, :with_id)
 
-    json = build(:response, { "id": 1 })
+      json = build(:response, { "id": 1 })
 
-    expect {
-      expect(json).to match_json_schema(schema)
-    }.to raise_error_containing(schema)
-  end
+      expect {
+        expect(json).not_to match_json_schema(schema)
+      }.to raise_error_containing(json)
+    end
 
-  it "contains the schema in the failure message when negated" do
-    schema = create(:schema, { "type": "array" })
+    it "when negated, contains the schema" do
+      schema = create(:schema, :with_id)
 
-    json = build(:response, body: "[]")
+      json = build(:response, { "id": 1 })
 
-    expect {
-      expect(json).not_to match_json_schema(schema)
-    }.to raise_error_containing(schema)
+      expect {
+        expect(json).not_to match_json_schema(schema)
+      }.to raise_error_containing(schema)
+    end
   end
 
   it "supports $ref" do
