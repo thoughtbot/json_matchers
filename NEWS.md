@@ -1,6 +1,11 @@
 master
 ======
 
+* Add `assert_json_matches_schema` and `refute_json_matches_schema` for
+  use in `minitest` test suites [#66]
+
+[#66]: https://github.com/thoughtbot/json_matchers/pull/66
+
 0.7.3
 =====
 
