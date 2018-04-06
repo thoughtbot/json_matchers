@@ -1,4 +1,5 @@
 require "json_matchers/rspec"
+require "active_support/core_ext/string"
 
 Dir["./spec/support/*"].each { |file| require file }
 

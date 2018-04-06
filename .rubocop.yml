@@ -10,8 +10,10 @@ Style/BracesAroundHashParameters:
   Enabled: true
   Exclude:
     - 'spec/**/*_spec.rb'
+    - 'spec/support/factories.rb'
 
 Layout/IndentHash:
   Enabled: true
   Exclude:
     - 'spec/**/*_spec.rb'
+    - 'spec/support/factories.rb'
