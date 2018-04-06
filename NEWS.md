@@ -1,6 +1,9 @@
 master
 ======
 
+0.8.0
+=====
+
 * Add `assert_json_matches_schema` and `refute_json_matches_schema` for
   use in `minitest` test suites [#66]
 
