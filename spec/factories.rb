@@ -55,6 +55,17 @@ FactoryBot.define do
       end
     end
 
+    trait :referencing_objects do
+      association :items, factory: [:schema, :object]
+
+      initialize_with do
+        FakeSchema.new(name, {
+          "type": "array",
+          "items": { "$ref": "#{items.name}.json" },
+        })
+      end
+    end
+
     initialize_with do
       schema_body_as_json = attributes.fetch(:json, nil)
       schema_body = attributes.except(:json, :name)

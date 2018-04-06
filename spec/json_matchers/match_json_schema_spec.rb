@@ -17,6 +17,22 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).to match_json_schema(schema)
   end
 
+  it "supports asserting with the match_response_schema alias" do
+    schema = create(:schema, :object)
+
+    json = build(:response, :invalid_object)
+
+    expect(json).not_to match_response_schema(schema)
+  end
+
+  it "supports refuting with the match_response_schema alias" do
+    schema = create(:schema, :object)
+
+    json = build(:response, :invalid_object)
+
+    expect(json).not_to match_response_schema(schema)
+  end
+
   it "fails when the body contains a property with the wrong type" do
     schema = create(:schema, :object)
 
@@ -158,19 +174,22 @@ describe JsonMatchers, "#match_json_schema" do
     end
   end
 
-  it "supports $ref" do
-    nested = create(:schema, :object)
-    collection = create(:schema, :array_of, {
-      "$ref": "#{nested.name}.json",
-    })
+  it "validates against a schema that uses $ref" do
+    schema = create(:schema, :referencing_objects)
 
-    valid_json = build(:response, body: [{ "id": 1 }])
-    invalid_json = build(:response, body: [{ "id": "1" }])
+    json = build(:response, :object)
+    json_as_array = [json.to_h]
 
-    expect(valid_json).to match_json_schema(collection)
-    expect(valid_json).to match_response_schema(collection)
-    expect(invalid_json).not_to match_json_schema(collection)
-    expect(invalid_json).not_to match_response_schema(collection)
+    expect(json_as_array).to match_json_schema(schema)
+  end
+
+  it "fails against a schema that uses $ref" do
+    schema = create(:schema, :referencing_objects)
+
+    json = build(:response, :invalid_object)
+    json_as_array = [json.to_h]
+
+    expect(json_as_array).not_to match_json_schema(schema)
   end
 
   context "when options are passed directly to the matcher" do
