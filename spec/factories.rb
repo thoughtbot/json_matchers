@@ -1,35 +1,14 @@
-require "json_matchers/payload"
-
 FactoryBot.define do
-  FakeResponse = Struct.new(:body) do
-    def to_h
-      JSON.parse(body)
-    end
-
-    def to_json
-      body
-    end
-  end
-  FakeSchema = Struct.new(:name, :json) do
-    def to_h
-      json
-    end
-
-    def to_s
-      name
-    end
-  end
-
   factory :response, class: FakeResponse do
-    trait :with_id do
+    skip_create
+
+    trait :object do
       body { { "id": 1 }.to_json }
     end
 
-    trait :invalid_with_id do
+    trait :invalid_object do
       body { { "id": "1" }.to_json }
     end
-
-    skip_create
 
     initialize_with do
       body = attributes.fetch(:body, nil)
@@ -40,13 +19,15 @@ FactoryBot.define do
   end
 
   factory :schema, class: FakeSchema do
+    skip_create
+
     sequence(:name) { |n| "json_schema-#{n}" }
 
     trait :invalid do
       json { "" }
     end
 
-    trait :with_id do
+    trait :object do
       json do
         {
           "type": "object",
@@ -60,9 +41,9 @@ FactoryBot.define do
         }
       end
     end
-    trait(:with_ids) { with_id }
+    trait(:objects) { object }
 
-    trait :array do
+    trait :array_of do
       initialize_with do
         schema_body_as_json = attributes.fetch(:json, nil)
         schema_body = attributes.except(:json, :name)
@@ -73,8 +54,6 @@ FactoryBot.define do
         })
       end
     end
-
-    skip_create
 
     initialize_with do
       schema_body_as_json = attributes.fetch(:json, nil)

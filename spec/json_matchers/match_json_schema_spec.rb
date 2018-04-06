@@ -18,15 +18,15 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "fails when the body contains a property with the wrong type" do
-    schema = create(:schema, :with_id)
+    schema = create(:schema, :object)
 
-    json = build(:response, :invalid_with_id)
+    json = build(:response, :invalid_object)
 
     expect(json).not_to match_json_schema(schema)
   end
 
   it "fails when the body is missing a required property" do
-    schema = create(:schema, :with_id)
+    schema = create(:schema, :object)
 
     json = build(:response, {})
 
@@ -35,18 +35,18 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when passed a Hash" do
     it "validates that the schema matches" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :with_id)
+      json = build(:response, :object)
       json_as_hash = json.to_h
 
       expect(json_as_hash).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
       json_as_hash = json.to_h
 
       expect {
@@ -57,27 +57,27 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when passed a Array" do
     it "validates a root-level Array in the JSON" do
-      schema = create(:schema, :array, :with_ids)
+      schema = create(:schema, :array_of, :objects)
 
-      json = build(:response, :with_id)
+      json = build(:response, :object)
       json_as_array = [json.to_h]
 
       expect(json_as_array).to match_json_schema(schema)
     end
 
     it "refutes a root-level Array in the JSON" do
-      schema = create(:schema, :array, :with_ids)
+      schema = create(:schema, :array_of, :objects)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
       json_as_array = [json.to_h]
 
       expect(json_as_array).not_to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :array, :with_id)
+      schema = create(:schema, :array_of, :object)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
       json_as_array = [json.to_h]
 
       expect {
@@ -88,18 +88,18 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when JSON is a string" do
     it "validates that the schema matches" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :with_id)
+      json = build(:response, :object)
       json_as_string = json.to_json
 
       expect(json_as_string).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
       json_as_string = json.to_json
 
       expect {
@@ -110,9 +110,9 @@ describe JsonMatchers, "#match_json_schema" do
 
   describe "the failure message" do
     it "contains the body" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -120,9 +120,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "contains the schema" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :invalid_with_id)
+      json = build(:response, :invalid_object)
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -130,9 +130,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "when negated, contains the body" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :with_id)
+      json = build(:response, :object)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -140,9 +140,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "when negated, contains the schema" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      json = build(:response, :with_id)
+      json = build(:response, :object)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -151,8 +151,8 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "supports $ref" do
-    nested = create(:schema, :with_id)
-    collection = create(:schema, :array, {
+    nested = create(:schema, :object)
+    collection = create(:schema, :array_of, {
       "$ref": "#{nested.name}.json",
     })
 
@@ -167,9 +167,9 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when options are passed directly to the matcher" do
     it "forwards options to the validator" do
-      schema = create(:schema, :with_id)
+      schema = create(:schema, :object)
 
-      matching_json = build(:response, :with_id)
+      matching_json = build(:response, :object)
       invalid_json = build(:response, { "id": 1, "title": "bar" })
 
       expect(matching_json).to match_json_schema(schema, strict: true)
@@ -180,9 +180,9 @@ describe JsonMatchers, "#match_json_schema" do
   context "when options are configured globally" do
     it "forwards them to the validator" do
       with_options(strict: true) do
-        schema = create(:schema, :with_id)
+        schema = create(:schema, :object)
 
-        matching_json = build(:response, :with_id)
+        matching_json = build(:response, :object)
         invalid_json = build(:response, { "id": 1, "title": "bar" })
 
         expect(matching_json).to match_json_schema(schema)
@@ -217,18 +217,11 @@ describe JsonMatchers, "#match_json_schema" do
 
   def raise_error_containing(schema_or_body)
     raise_error do |error|
-      sanitized_message = squish(error.message)
+      sanitized_message = error.message.squish
       json = JSON.pretty_generate(schema_or_body.to_h)
-      error_message = squish(json)
+      error_message = json.squish
 
       expect(sanitized_message).to include(error_message)
     end
-  end
-
-  def squish(string)
-    string.
-      gsub(/\A[[:space:]]+/, "").
-      gsub(/[[:space:]]+\z/, "").
-      gsub(/[[:space:]]+/, " ")
   end
 end
