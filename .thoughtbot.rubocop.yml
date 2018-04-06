@@ -352,8 +352,18 @@ Style/TrailingCommaInArguments:
     - no_comma
   Enabled: true
 
-Style/TrailingCommaInLiteral:
-  Description: 'Checks for trailing comma in array and hash literals.'
+Style/TrailingCommaInHashLiteral:
+  Description: 'Checks for trailing comma in hash literals.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  EnforcedStyleForMultiline: comma
+  SupportedStylesForMultiline:
+    - comma
+    - consistent_comma
+    - no_comma
+  Enabled: true
+
+Style/TrailingCommaInArrayLiteral:
+  Description: 'Checks for trailing comma in array literals.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
   EnforcedStyleForMultiline: comma
   SupportedStylesForMultiline:
@@ -450,7 +460,7 @@ Lint/CircularArgumentReference:
   Description: "Don't refer to the keyword argument in the default value."
   Enabled: false
 
-Lint/ConditionPosition:
+Layout/ConditionPosition:
   Description: >-
                  Checks for condition placed in a confusing position relative to
                  the keyword.
