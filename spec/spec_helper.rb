@@ -1,7 +1,6 @@
 require "json_matchers/rspec"
-require "active_support/core_ext/string"
 
-Dir["./spec/support/*"].each { |file| require file }
+Dir["./spec/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

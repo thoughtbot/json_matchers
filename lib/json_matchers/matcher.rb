@@ -8,8 +8,8 @@ module JsonMatchers
       @options = default_options.merge(options)
     end
 
-    def matches?(response)
-      validator = build_validator(response)
+    def matches?(payload)
+      validator = build_validator(payload)
 
       self.errors = validator.validate!
 
@@ -34,10 +34,10 @@ module JsonMatchers
       JsonMatchers.configuration.options || {}
     end
 
-    def build_validator(response)
+    def build_validator(payload)
       Validator.new(
         options: options,
-        response: response,
+        payload: payload,
         schema_path: schema_path,
       )
     end

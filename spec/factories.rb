@@ -1,20 +1,25 @@
+require "json_matchers/payload"
+require_relative "./support/fake_response"
+require_relative "./support/fake_schema"
+
 FactoryBot.define do
   factory :response, class: FakeResponse do
     skip_create
 
     trait :object do
-      body { { "id": 1 }.to_json }
+      body { { "id": 1 } }
     end
 
     trait :invalid_object do
-      body { { "id": "1" }.to_json }
+      body { { "id": "1" } }
     end
 
     initialize_with do
       body = attributes.fetch(:body, nil)
-      payload = attributes.except(:body)
+      json = attributes.except(:body)
+      payload = JsonMatchers::Payload.new(body || json)
 
-      FakeResponse.new(body || payload.to_json)
+      FakeResponse.new(payload.to_s)
     end
   end
 

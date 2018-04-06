@@ -4,19 +4,25 @@ inherit_from:
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
+    - 'test/**/*_test.rb'
     - 'spec/**/*_spec.rb'
 
 Style/BracesAroundHashParameters:
   Enabled: true
   Exclude:
+    - 'test/**/*_test.rb'
     - 'spec/**/*_spec.rb'
     - 'spec/factories.rb'
 
 Style/SymbolArray:
   Enabled: false
 
+Layout/IndentHeredoc:
+  Enabled: false
+
 Layout/IndentHash:
   Enabled: true
   Exclude:
+    - 'test/**/*_test.rb'
     - 'spec/**/*_spec.rb'
     - 'spec/factories.rb'

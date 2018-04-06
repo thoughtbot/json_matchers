@@ -18,7 +18,7 @@ module JsonMatchers
       elsif payload.is_a?(Array) || payload.is_a?(Hash)
         payload.to_json
       else
-        payload
+        payload.to_s
       end
     end
   end

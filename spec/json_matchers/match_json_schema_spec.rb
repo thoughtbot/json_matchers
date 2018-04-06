@@ -1,3 +1,5 @@
+require "active_support/core_ext/string"
+
 describe JsonMatchers, "#match_json_schema" do
   it "fails with an invalid JSON schema" do
     schema = create(:schema, :invalid)

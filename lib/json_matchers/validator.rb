@@ -1,11 +1,10 @@
 require "json-schema"
-require "json_matchers/payload"
 
 module JsonMatchers
   class Validator
-    def initialize(options:, response:, schema_path:)
+    def initialize(options:, payload:, schema_path:)
       @options = options.dup
-      @payload = Payload.new(response).to_s
+      @payload = payload
       @schema_path = schema_path.to_s
     end
 
