@@ -116,7 +116,7 @@ def test_GET_posts_returns_Posts
 end
 ```
 
-### Passing options to the validator
+### DEPRECATED: Passing options to the validator
 
 The matcher accepts options, which it passes to the validator:
 
@@ -137,7 +137,7 @@ A list of available options can be found [here][options].
 
 [options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
 
-### Global matcher options
+### DEPRECATED: Global matcher options
 
 To configure the default options passed to *all* matchers, call
 `JsonMatchers.configure`.
@@ -152,7 +152,7 @@ end
 
 A list of available options can be found [here][options].
 
-### Default matcher options
+### DEPRECATED: Default matcher options
 
 * `record_errors: true` - *NOTE* `json_matchers` will always set
   `record_errors: true`. This cannot be overridden.
@@ -200,6 +200,12 @@ In this case `"post.json"` will be resolved relative to
 `"spec/support/api/schemas"`.
 
 To learn more about `$ref`, check out [Understanding JSON Schema Structuring](http://spacetelescope.github.io/understanding-json-schema/structuring.html)
+
+## Upgrading from `0.9.x`
+
+After `json_matchers@0.9.x`, calls to `match_json_schema` and
+`match_response_schema` no longer accept options, and `JsonMatchers.configure`
+will been removed.
 
 ## Contributing
 

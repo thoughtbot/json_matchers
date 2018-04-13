@@ -1,6 +1,11 @@
 master
 ======
 
+0.9.0
+=====
+
+* Deprecate support for configuring validation options.
+
 0.8.0
 =====
 

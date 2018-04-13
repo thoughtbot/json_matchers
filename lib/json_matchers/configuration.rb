@@ -4,6 +4,14 @@ module JsonMatchers
   end
 
   def self.configure
+    warn <<-WARN
+DEPRECATION: `JsonMatchers.configure`
+  After `json_matchers@0.9.x`, JsonMatchers.configure will be removed.
+
+  See https://github.com/thoughtbot/json_matchers/pull/31 for more information.
+
+WARN
+
     yield(configuration)
   end
 

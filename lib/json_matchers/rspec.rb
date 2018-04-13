@@ -6,6 +6,18 @@ module JsonMatchers
 end
 
 RSpec::Matchers.define :match_json_schema do |schema_name, **options|
+  if options.present?
+    warn <<-WARN
+DEPRECATION:
+
+  After `json_matchers@0.9.x`, calls to `match_json_schema` and
+  `match_response_schema` will no longer accept options.
+
+  See https://github.com/thoughtbot/json_matchers/pull/31 for more information.
+
+WARN
+  end
+
   assertion = JsonMatchers::Assertion.new(schema_name.to_s, options)
 
   match do |json|
