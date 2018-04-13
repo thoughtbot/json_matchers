@@ -5,10 +5,10 @@ require "json_matchers/matcher"
 
 module JsonMatchers
   class Assertion
-    def initialize(schema_name, **options)
-      @schema_name = schema_name
+    def initialize(schema_name)
+      @schema_name = schema_name.to_s
       @schema_path = JsonMatchers.path_to_schema(schema_name)
-      @matcher = Matcher.new(schema_path, options)
+      @matcher = Matcher.new(schema_path)
     end
 
     def valid?(json)

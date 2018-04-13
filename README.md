@@ -116,47 +116,6 @@ def test_GET_posts_returns_Posts
 end
 ```
 
-### DEPRECATED: Passing options to the validator
-
-The matcher accepts options, which it passes to the validator:
-
-`spec/requests/posts_spec.rb`
-
-```ruby
-describe "GET /posts" do
-  it "returns Posts" do
-    get posts_path, format: :json
-
-    expect(response.status).to eq 200
-    expect(response).to match_json_schema("posts", strict: true)
-  end
-end
-```
-
-A list of available options can be found [here][options].
-
-[options]: https://github.com/ruby-json-schema/json-schema/blob/2.2.4/lib/json-schema/validator.rb#L160-L162
-
-### DEPRECATED: Global matcher options
-
-To configure the default options passed to *all* matchers, call
-`JsonMatchers.configure`.
-
-`spec/support/json_matchers.rb`:
-
-```rb
-JsonMatchers.configure do |config|
-  config.options[:strict] = true
-end
-```
-
-A list of available options can be found [here][options].
-
-### DEPRECATED: Default matcher options
-
-* `record_errors: true` - *NOTE* `json_matchers` will always set
-  `record_errors: true`. This cannot be overridden.
-
 ### Embedding other Schemas
 
 To DRY up your schema definitions, use JSON schema's `$ref`.
@@ -203,9 +162,8 @@ To learn more about `$ref`, check out [Understanding JSON Schema Structuring](ht
 
 ## Upgrading from `0.9.x`
 
-After `json_matchers@0.9.x`, calls to `match_json_schema` and
-`match_response_schema` no longer accept options, and `JsonMatchers.configure`
-will been removed.
+Calls to `match_json_schema` and `match_response_schema` no longer accept
+options, and `JsonMatchers.configure` has been removed.
 
 ## Contributing
 

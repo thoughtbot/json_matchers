@@ -3,9 +3,8 @@ require "json_matchers/validator"
 
 module JsonMatchers
   class Matcher
-    def initialize(schema_path, options = {})
+    def initialize(schema_path)
       @schema_path = schema_path
-      @options = default_options.merge(options)
     end
 
     def matches?(payload)
@@ -27,16 +26,11 @@ module JsonMatchers
 
     private
 
-    attr_reader :schema_path, :options
+    attr_reader :schema_path
     attr_accessor :errors
-
-    def default_options
-      JsonMatchers.configuration.options || {}
-    end
 
     def build_validator(payload)
       Validator.new(
-        options: options,
         payload: payload,
         schema_path: schema_path,
       )

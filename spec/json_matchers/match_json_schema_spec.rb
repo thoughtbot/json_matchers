@@ -194,56 +194,6 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json_as_array).not_to match_json_schema(schema)
   end
 
-  context "when options are passed directly to the matcher" do
-    it "forwards options to the validator" do
-      schema = create(:schema, :object)
-
-      matching_json = build(:response, :object)
-      invalid_json = build(:response, { "id": 1, "title": "bar" })
-
-      expect(matching_json).to match_json_schema(schema, strict: true)
-      expect(invalid_json).not_to match_json_schema(schema, strict: true)
-    end
-  end
-
-  context "when options are configured globally" do
-    it "forwards them to the validator" do
-      with_options(strict: true) do
-        schema = create(:schema, :object)
-
-        matching_json = build(:response, :object)
-        invalid_json = build(:response, { "id": 1, "title": "bar" })
-
-        expect(matching_json).to match_json_schema(schema)
-        expect(invalid_json).not_to match_json_schema(schema)
-      end
-    end
-
-    context "when configured to record errors" do
-      it "includes the reasons for failure in the exception's message" do
-        with_options(record_errors: true) do
-          schema = create(:schema, {
-            "type": "object",
-            "properties": {
-              "username": {
-                "allOf": [
-                  { "type": "string" },
-                  { "minLength": 5 },
-                ],
-              },
-            },
-          })
-
-          invalid_json = build(:response, { "username": "foo" })
-
-          expect {
-            expect(invalid_json).to match_json_schema(schema)
-          }.to raise_error(/minimum/)
-        end
-      end
-    end
-  end
-
   def raise_error_containing(schema_or_body)
     raise_error do |error|
       sanitized_message = error.message.squish
