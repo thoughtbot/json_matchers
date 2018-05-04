@@ -20,31 +20,31 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "supports asserting with the match_response_schema alias" do
-    schema = create(:schema, :object)
+    schema = create(:schema, :location)
 
-    json = build(:response, :invalid_object)
+    json = build(:response, :invalid_location)
 
     expect(json).not_to match_response_schema(schema)
   end
 
   it "supports refuting with the match_response_schema alias" do
-    schema = create(:schema, :object)
+    schema = create(:schema, :location)
 
-    json = build(:response, :invalid_object)
+    json = build(:response, :invalid_location)
 
     expect(json).not_to match_response_schema(schema)
   end
 
   it "fails when the body contains a property with the wrong type" do
-    schema = create(:schema, :object)
+    schema = create(:schema, :location)
 
-    json = build(:response, :invalid_object)
+    json = build(:response, :invalid_location)
 
     expect(json).not_to match_json_schema(schema)
   end
 
   it "fails when the body is missing a required property" do
-    schema = create(:schema, :object)
+    schema = create(:schema, :location)
 
     json = build(:response, {})
 
@@ -52,27 +52,27 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "can reference a schema in a directory" do
-    create(:schema, :object, name: "api/v1/schema")
+    create(:schema, :location, name: "api/v1/schema")
 
-    json = build(:response, :object)
+    json = build(:response, :location)
 
     expect(json).to match_json_schema("api/v1/schema")
   end
 
   context "when passed a Hash" do
     it "validates that the schema matches" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :object)
+      json = build(:response, :location)
       json_as_hash = json.to_h
 
       expect(json_as_hash).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
       json_as_hash = json.to_h
 
       expect {
@@ -83,27 +83,27 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when passed a Array" do
     it "validates a root-level Array in the JSON" do
-      schema = create(:schema, :array_of, :objects)
+      schema = create(:schema, :array_of, :locations)
 
-      json = build(:response, :object)
+      json = build(:response, :location)
       json_as_array = [json.to_h]
 
       expect(json_as_array).to match_json_schema(schema)
     end
 
     it "refutes a root-level Array in the JSON" do
-      schema = create(:schema, :array_of, :objects)
+      schema = create(:schema, :array_of, :locations)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
       json_as_array = [json.to_h]
 
       expect(json_as_array).not_to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :array_of, :object)
+      schema = create(:schema, :array_of, :location)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
       json_as_array = [json.to_h]
 
       expect {
@@ -114,18 +114,18 @@ describe JsonMatchers, "#match_json_schema" do
 
   context "when JSON is a string" do
     it "validates that the schema matches" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :object)
+      json = build(:response, :location)
       json_as_string = json.to_json
 
       expect(json_as_string).to match_json_schema(schema)
     end
 
     it "fails with message when negated" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
       json_as_string = json.to_json
 
       expect {
@@ -135,18 +135,18 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "fails when the body contains a property with the wrong type" do
-    schema = create(:schema, :object)
+    schema = create(:schema, :location)
 
-    json = build(:response, :invalid_object)
+    json = build(:response, :invalid_location)
 
     expect(json).not_to match_json_schema(schema)
   end
 
   describe "the failure message" do
     it "contains the body" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -154,9 +154,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "contains the schema" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :invalid_object)
+      json = build(:response, :invalid_location)
 
       expect {
         expect(json).to match_json_schema(schema)
@@ -164,9 +164,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "when negated, contains the body" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :object)
+      json = build(:response, :location)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -174,9 +174,9 @@ describe JsonMatchers, "#match_json_schema" do
     end
 
     it "when negated, contains the schema" do
-      schema = create(:schema, :object)
+      schema = create(:schema, :location)
 
-      json = build(:response, :object)
+      json = build(:response, :location)
 
       expect {
         expect(json).not_to match_json_schema(schema)
@@ -185,18 +185,18 @@ describe JsonMatchers, "#match_json_schema" do
   end
 
   it "validates against a schema that uses $ref" do
-    schema = create(:schema, :referencing_objects)
+    schema = create(:schema, :referencing_locations)
 
-    json = build(:response, :object)
+    json = build(:response, :location)
     json_as_array = [json.to_h]
 
     expect(json_as_array).to match_json_schema(schema)
   end
 
   it "fails against a schema that uses $ref" do
-    schema = create(:schema, :referencing_objects)
+    schema = create(:schema, :referencing_locations)
 
-    json = build(:response, :invalid_object)
+    json = build(:response, :invalid_location)
     json_as_array = [json.to_h]
 
     expect(json_as_array).not_to match_json_schema(schema)
@@ -205,8 +205,8 @@ describe JsonMatchers, "#match_json_schema" do
   it "validates against a schema referencing with 'definitions'" do
     schema = create(:schema, :referencing_definitions)
 
-    json = build(:response, :object)
-    json_as_hash = { "objects" => [json] }
+    json = build(:response, :location)
+    json_as_hash = { "locations" => [json] }
 
     expect(json_as_hash).to match_json_schema(schema)
   end
@@ -214,8 +214,8 @@ describe JsonMatchers, "#match_json_schema" do
   it "fails against a schema referencing with 'definitions'" do
     schema = create(:schema, :referencing_definitions)
 
-    json = build(:response, :invalid_object)
-    json_as_hash = { "objects" => [json] }
+    json = build(:response, :invalid_location)
+    json_as_hash = { "locations" => [json] }
 
     expect(json_as_hash).not_to match_json_schema(schema)
   end
