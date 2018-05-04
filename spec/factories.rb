@@ -24,8 +24,6 @@ FactoryBot.define do
   end
 
   factory :schema, class: FakeSchema do
-    skip_create
-
     sequence(:name) { |n| "json_schema-#{n}" }
 
     trait :invalid do
@@ -110,7 +108,7 @@ FactoryBot.define do
       FakeSchema.new(name, schema_body_as_json || schema_body)
     end
 
-    after :create do |schema|
+    to_create do |schema|
       path = File.join(JsonMatchers.schema_root, "#{schema.name}.json")
       payload = JsonMatchers::Payload.new(schema.json)
 
