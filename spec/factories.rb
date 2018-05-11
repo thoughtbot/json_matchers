@@ -111,9 +111,10 @@ FactoryBot.define do
     end
 
     after :create do |schema|
-      path = File.join(JsonMatchers.schema_root, "#{schema.name}.json")
+      path = JsonMatchers.path_to_schema(schema.name)
       payload = JsonMatchers::Payload.new(schema.json)
 
+      path.dirname.mkpath
       IO.write(path, payload)
     end
   end

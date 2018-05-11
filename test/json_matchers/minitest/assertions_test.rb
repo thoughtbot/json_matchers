@@ -36,6 +36,14 @@ class AssertResponseMatchesSchemaTest < JsonMatchers::TestCase
     refute_matches_json_schema(json, schema)
   end
 
+  test "can reference a schema in a directory" do
+    create(:schema, :object, name: "api/v1/schema")
+
+    json = build(:response, :object)
+
+    assert_matches_json_schema(json, "api/v1/schema")
+  end
+
   test "when passed a Hash, validates that the schema matches" do
     schema = create(:schema, :object)
 

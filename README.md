@@ -85,8 +85,6 @@ directory.
 
 #### RSpec
 
-```ruby
-
 Validate a JSON response, a Hash, or a String against a JSON Schema with
 `match_json_schema`:
 
@@ -177,6 +175,43 @@ To learn more about `$ref`, check out
 [Understanding JSON Schema Structuring][$ref].
 
 [$ref]: https://spacetelescope.github.io/understanding-json-schema/structuring.html
+
+### Declaring a schema in a Subdirectory
+
+Nesting a schema within a subdirectory is also supported:
+
+`spec/support/api/schemas/api/v1/location.json`:
+
+
+```json
+{
+  "id": "https://json-schema.org/geo",
+  "$schema": "https://json-schema.org/draft-06/schema#",
+  "description": "A geographical coordinate",
+  "type": "object",
+  "properties": {
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    }
+  }
+}
+```
+
+`spec/requests/api/v1/locations_spec.rb`:
+
+```ruby
+describe "GET api/v1/locations" do
+  it "returns Locations" do
+    get locations_path, format: :json
+
+    expect(response.status).to eq 200
+    expect(response).to match_json_schema("api/v1/location")
+  end
+end
+```
 
 ## Configuration
 

@@ -51,6 +51,14 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).not_to match_json_schema(schema)
   end
 
+  it "can reference a schema in a directory" do
+    create(:schema, :object, name: "api/v1/schema")
+
+    json = build(:response, :object)
+
+    expect(json).to match_json_schema("api/v1/schema")
+  end
+
   context "when passed a Hash" do
     it "validates that the schema matches" do
       schema = create(:schema, :object)
