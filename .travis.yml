@@ -4,4 +4,6 @@ language: ruby
 notifications:
   email: false
 rvm:
-- 2.5.0
+  - 2.5.0
+before_install:
+  - gem update --system
