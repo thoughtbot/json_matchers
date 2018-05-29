@@ -37,7 +37,7 @@ First, configure it in your test suite's helper file:
 ```ruby
 require "json_matchers/rspec"
 
-JsonMatchers.schema_root = "/spec/support/api/schemas"
+JsonMatchers.schema_root = "spec/support/api/schemas"
 ```
 
 #### Minitest
@@ -48,7 +48,7 @@ JsonMatchers.schema_root = "/spec/support/api/schemas"
 require "minitest/autorun"
 require "json_matchers/minitest/assertions"
 
-JsonMatchers.schema_root = "/test/support/api/schemas"
+JsonMatchers.schema_root = "test/support/api/schemas"
 
 Minitest::Test.send(:include, JsonMatchers::Minitest::Assertions)
 ```
