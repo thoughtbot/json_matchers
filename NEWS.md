@@ -1,6 +1,9 @@
 master
 ======
 
+0.10.0
+======
+
 * *BREAKING CHANGE* Implement the validation with the `json_schema` gem instead
   of `json-schema`. [#31]
 * *BREAKING CHANGE* - remove support for configuring validation options.
