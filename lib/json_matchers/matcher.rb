@@ -36,6 +36,10 @@ module JsonMatchers
         map { |schema_path| Parser.new(schema_path).parse }.
         each { |schema| document_store.add_schema(schema) }
 
+      document_store.to_a.each do |_k, schema|
+        schema.expand_references!(store: document_store)
+      end
+
       document_store
     end
   end

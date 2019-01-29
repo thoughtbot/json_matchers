@@ -202,6 +202,24 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json_as_array).not_to match_json_schema(schema)
   end
 
+  it "validates against a schema that uses nested $refs" do
+    schema = create(:schema, :referencing_locations,
+                    items: create(:schema, :referencing_locations))
+    json = build(:response, :location)
+    json_as_array = [[json.to_h]]
+
+    expect(json_as_array).to match_json_schema(schema)
+  end
+
+  it "fails against a schema that uses nested $refs" do
+    schema = create(:schema, :referencing_locations,
+                    items: create(:schema, :referencing_locations))
+    json = build(:response, :invalid_location)
+    json_as_array = [[json.to_h]]
+
+    expect(json_as_array).not_to match_json_schema(schema)
+  end
+
   it "validates against a schema referencing with 'definitions'" do
     schema = create(:schema, :referencing_definitions)
 
