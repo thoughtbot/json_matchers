@@ -171,6 +171,27 @@ class AssertResponseMatchesSchemaTest < JsonMatchers::TestCase
     refute_matches_json_schema(json_as_array, schema)
   end
 
+  test "validates against a schema that uses nested $refs" do
+    items = create(:schema, :referencing_locations)
+    schema = create(:schema, :referencing_locations, items: items)
+
+    json = build(:response, :location)
+    json_as_array = [[json.to_h]]
+
+    assert_matches_json_schema(json_as_array, schema)
+  end
+
+  test "fails against a schema that uses nested $refs" do
+    items = create(:schema, :referencing_locations)
+    schema = create(:schema, :referencing_locations, items: items)
+
+    json = build(:response, :invalid_location)
+    json_as_array = [[json.to_h]]
+
+    refute_matches_json_schema(json_as_array, schema)
+  end
+
+
   test "validates against a schema referencing with 'definitions'" do
     schema = create(:schema, :referencing_definitions)
 

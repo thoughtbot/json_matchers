@@ -34,7 +34,8 @@ module JsonMatchers
       Dir.glob("#{JsonMatchers.schema_root}/**/*.json").
         map { |path| Pathname.new(path) }.
         map { |schema_path| Parser.new(schema_path).parse }.
-        each { |schema| document_store.add_schema(schema) }
+        map { |schema| document_store.add_schema(schema) }.
+        each { |schema| schema.expand_references!(store: document_store) }
 
       document_store
     end

@@ -68,6 +68,7 @@ FactoryBot.define do
 
       initialize_with do
         FakeSchema.new(name, {
+          "id": "file:/#{name}.json#",
           "$schema": "https://json-schema.org/draft-04/schema#",
           "type": "array",
           "items": { "$ref": "file:/#{items.name}.json#" },
