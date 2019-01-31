@@ -50,7 +50,7 @@ require "json_matchers/minitest/assertions"
 
 JsonMatchers.schema_root = "test/support/api/schemas"
 
-Minitest::Test.send(:include, JsonMatchers::Minitest::Assertions)
+Minitest::Test.include(JsonMatchers::Minitest::Assertions)
 ```
 
 ### Declare
