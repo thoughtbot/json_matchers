@@ -55,13 +55,13 @@ Minitest::Test.include(JsonMatchers::Minitest::Assertions)
 
 ### Declare
 
-Declare your [JSON Schema](https://json-schema.org/example1.html) in the schema
+Declare your [JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html) in the schema
 directory.
 
 `spec/support/api/schemas/location.json` or
 `test/support/api/schemas/location.json`:
 
-Define your [JSON Schema](https://json-schema.org/example1.html) in the schema
+Define your [JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html) in the schema
 directory.
 
 ```json
