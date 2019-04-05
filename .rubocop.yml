@@ -17,6 +17,20 @@ Style/BracesAroundHashParameters:
 Style/SymbolArray:
   Enabled: false
 
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  Exclude:
+    - 'test/**/*_test.rb'
+    - 'spec/**/*_spec.rb'
+    - 'spec/factories.rb'
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  Exclude:
+    - 'test/**/*_test.rb'
+    - 'spec/**/*_spec.rb'
+    - 'spec/factories.rb'
+
 Layout/IndentHeredoc:
   Enabled: false
 
