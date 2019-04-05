@@ -1,6 +1,14 @@
 master
 ======
 
+0.11.0
+======
+
+* Expand references of DocuemntStore schemas ([#93], [3b66b4d])
+
+[#93]: https://github.com/thoughtbot/json_matchers/pull/93
+[3b66b4d]: https://github.com/thoughtbot/json_matchers/commit/3b66b4ddf369ec09b50cfe39c614266b34c7f3fe
+
 0.10.0
 ======
 
