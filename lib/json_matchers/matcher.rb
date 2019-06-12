@@ -19,6 +19,24 @@ module JsonMatchers
       errors.first.to_s
     end
 
+    class << self
+      attr_writer :document_store
+
+      def document_store
+        @document_store ||= begin
+          document_store = JsonSchema::DocumentStore.new
+
+          Dir.glob("#{JsonMatchers.schema_root}/**/*.json").
+            map { |path| Pathname.new(path) }.
+            map { |schema_path| Parser.new(schema_path).parse }.
+            map { |schema| document_store.add_schema(schema) }.
+            each { |schema| schema.expand_references!(store: document_store) }
+
+          document_store
+        end
+      end
+    end
+
     private
 
     attr_accessor :errors
@@ -29,15 +47,7 @@ module JsonMatchers
     end
 
     def build_and_populate_document_store
-      document_store = JsonSchema::DocumentStore.new
-
-      Dir.glob("#{JsonMatchers.schema_root}/**/*.json").
-        map { |path| Pathname.new(path) }.
-        map { |schema_path| Parser.new(schema_path).parse }.
-        map { |schema| document_store.add_schema(schema) }.
-        each { |schema| schema.expand_references!(store: document_store) }
-
-      document_store
+      self.class.document_store
     end
   end
 end

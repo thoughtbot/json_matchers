@@ -15,6 +15,7 @@ RSpec.configure do |config|
 
   config.around do |example|
     ensure_fixtures("spec", "fixtures", "schemas") do
+      JsonMatchers::Matcher.document_store = nil
       example.run
     end
   end
