@@ -59,6 +59,17 @@ describe JsonMatchers, "#match_json_schema" do
     expect(json).to match_json_schema("api/v1/schema")
   end
 
+  it "does not reload document store" do
+    create(:schema, :location, name: "api/v1/schema")
+
+    json = build(:response, :location)
+
+    expect(Dir).to receive(:glob).once.and_call_original
+    2.times do
+      expect(json).to match_json_schema("api/v1/schema")
+    end
+  end
+
   it "supports invalidating the referenced schema when using local references" do
     create(:schema, name: "post", json: {
       "$schema": "https://json-schema.org/draft-04/schema#",

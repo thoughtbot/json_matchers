@@ -9,6 +9,7 @@ module JsonMatchers
 
     def setup
       @original_schema_root = setup_fixtures("test", "fixtures", "schemas")
+      JsonMatchers::Matcher.document_store = nil
     end
 
     def teardown
