@@ -1,6 +1,8 @@
 master
 ======
 
+* Follow first-level symlinks in the document store. [#99]
+
 0.11.0
 ======
 
