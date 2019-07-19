@@ -1,7 +1,12 @@
 master
 ======
 
+0.11.1
+======
+
 * Follow first-level symlinks in the document store. [#99]
+
+[#99]: https://github.com/thoughtbot/json_matchers/pull/99
 
 0.11.0
 ======
