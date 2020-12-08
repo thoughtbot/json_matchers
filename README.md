@@ -55,14 +55,12 @@ Minitest::Test.include(JsonMatchers::Minitest::Assertions)
 
 ### Declare
 
-Declare your [JSON Schema](https://json-schema.org/example1.html) in the schema
-directory.
+Declare your in the schema directory.
+Validate your [json schema](https://json-schema.org) with any online service that you like,
+or any gem, e.g. [jsonlint](https://github.com/dougbarth/jsonlint).
 
 `spec/support/api/schemas/location.json` or
 `test/support/api/schemas/location.json`:
-
-Define your [JSON Schema](https://json-schema.org/example1.html) in the schema
-directory.
 
 ```json
 {
