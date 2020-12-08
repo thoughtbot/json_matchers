@@ -134,8 +134,8 @@ First, declare the singular version of your schema.
   "properties": {
     "id": { "type": "integer" },
     "name": { "type": "string" },
-    "address": { "type": "string" },
-  },
+    "address": { "type": "string" }
+  }
 }
 ```
 
@@ -154,16 +154,15 @@ Then, when you declare your collection schema, reference your singular schemas.
       "type": "array",
       "items": {
         "$ref": "file:/user.json#"
-      },
-    },
+      }
+    }
   },
   "required": ["users"],
   "properties": {
     "users": {
       "$ref": "#/definitions/users"
     }
-  },
-}
+  }
 ```
 
 NOTE: `$ref` resolves paths relative to the schema in question.
