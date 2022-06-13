@@ -1,5 +1,6 @@
 require "json_matchers"
 require "json_matchers/assertion"
+require "rspec"
 
 module JsonMatchers
   self.schema_root = File.join("spec", "support", "api", "schemas")
